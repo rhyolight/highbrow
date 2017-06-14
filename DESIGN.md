@@ -85,7 +85,6 @@ Wraps the YAML network configuration, used to instantiate `HtmNetwork`.
 Any discrete object that can be rendered.
 
 - `Point`:`getOrigin` -- Denotes where the `Renderable` should be drawn.
-- `setOrigin(Point)`
 
 > NOTE: The size of `Renderable` objects is not controlled by this API. Rendering Adapters are responsible for sizing.
 

@@ -28,43 +28,33 @@ YAML configuration that is read on startup and used to configure the `HtmNetwork
 
 ### Rendering Adapter
 
-Renders 3D visualization in an animation environment. This is the primary client for Highbrow, which is designed to be generic enouhg to render in multiple possible animation platforms (Unity, WEBGL, etc).
+Renders 3D visualization in an animation environment. This is the primary client for Highbrow, which is designed to be generic enough to render in multiple possible animation platforms (Unity, WEBGL, etc). See the proposed API below that any Rendering Adapters will use to extract 3D rendering details from Highbrow.
 
 ### HTM State Data
 
 Data, either streaming or batched, that contains the state of the HTM system. Should be fed into Highbrow one row at a time. Once data has entered Highbrow, it will be exposed through the proposed API defined below.
 
-## Proposed API
+> TODO: Define format of input "HTM State Data".
+
+
+* * *
+
+# Proposed API
 
 ### `Highbrow`
 
 Global drawing properties.
 
-> NOTE: Changing the scale of the canvas will affect how tightly packed or spread out the `Points` returned by `Renderable` objects will be. All `Point` objects will have their coordinates multiplied by the scale.
+> NOTE: Changing the scale of the canvas will affect how tightly packed or spread out the `Points` returned by `Renderable` objects will be. All `Point` objects will have their coordinates multiplied by the scale (default `1.0`).
 
 - `setScale(Point)` -- Sets the scale for drawing.
 - `Point`:`getScale()` -- Get current scale for drawings.
 
 ### `Point`
 
-3D point with `x`, `y`, `z`.
+3D point with `x`, `y`, `z` properties.
 
-### `Renderable` <small>(interface)</small>
-
-Any discrete object that can be rendered.
-
-- `Point`:`getOrigin` -- Denotes where the `Renderable` should be drawn.
-- `setOrigin(Point)`
-
-> NOTE: The size of `Renderable` objects is not controlled by this API. Rendering Adapters are responsible for sizing.
-
-### `LinkType` <small>(enum)</small>
-
-Defines different ways `Layers` can be associated with `HtmNetworkLinks`.
-
-- `apical`
-- `proximal`
-- `distal`
+## State Objects
 
 ### `NeuronState` <small>(enum)</small>
 
@@ -88,6 +78,18 @@ All the different states a `MiniColumn` may be in.
 
 Wraps the YAML network configuration, used to instantiate `HtmNetwork`.
 
+## Renderable Objects
+
+### `Renderable` <small>(interface)</small>
+
+Any discrete object that can be rendered.
+
+- `Point`:`getOrigin` -- Denotes where the `Renderable` should be drawn.
+- `setOrigin(Point)`
+
+> NOTE: The size of `Renderable` objects is not controlled by this API. Rendering Adapters are responsible for sizing.
+
+
 ### `HtmNetwork` <small>(implements `Renderable`)</small>
 
 Encapsulates all `Renderable` HTM components defined below.
@@ -96,6 +98,7 @@ Encapsulates all `Renderable` HTM components defined below.
 - `CorticalColumn[]`:`getCorticalColumns()`
 - `HtmConfiguration`:`getConfig()`
 - `HtmNetworkLink`:`getHtmNetworkLinks()` -- Gets all the links from all `Layer` objects in the network.
+- `updateState(dataRow)` -- Sets a new state of the `HtmNetwork` given a new row of "HTM State Data" (loosely defined above).
 
 ### `HtmNetworkLink` <small>(implements `Renderable`)</small>
 

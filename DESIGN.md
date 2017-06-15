@@ -36,102 +36,15 @@ Data, either streaming or batched, that contains the state of the HTM system. Sh
 
 > TODO: Define format of input "HTM State Data".
 
-
 * * *
 
 # Proposed API
 
-### `Highbrow`
-
-Global drawing properties.
-
-> NOTE: Changing the scale of the canvas will affect how tightly packed or spread out the `Points` returned by `Renderable` objects will be. All `Point` objects will have their coordinates multiplied by the scale (default `1.0`).
-
-- `setScale(float)` -- Sets the scale for drawing.
-- `Point`:`getScale()` -- Get current scale for drawings.
-
-### `Point`
-
-3D point with `x`, `y`, `z` properties.
-
-## State Objects
-
-### `NeuronState` <small>(enum)</small>
-
-All the different states a pyramidal `Neuron` may be in.
-
-> TODO: Sometimes a neuron will be in more than one state at once. This either needs to define mixed states or Neuron's should be allowed to be in multiple states.
-
-- `inactive`
-- `active`
-- `depolarized`
-- `predicted`
-
-### `MiniColumnState` <small>(enum)</small>
-
-All the different states a `MiniColumn` may be in.
-
-- `inactive`
-- `active`
-
-### `HtmConfiguration`
-
-Wraps the YAML network configuration, used to instantiate `HtmNetwork`.
-
-## Renderable Objects
-
-### `Renderable` <small>(interface)</small>
-
-Any discrete object that can be rendered.
-
-- `Point`:`getOrigin` -- Denotes where the `Renderable` should be drawn.
-
-> NOTE: The size of `Renderable` objects is not controlled by this API. Rendering Adapters are responsible for sizing.
-
-
-### `HtmNetwork` <small>(implements `Renderable`)</small>
-
-Encapsulates all `Renderable` HTM components defined below.
-
-- `constructor(HtmConfiguration)`
-- `CorticalColumn[]`:`getCorticalColumns()`
-- `HtmConfiguration`:`getConfig()`
-- `HtmNetworkLink`:`getHtmNetworkLinks()` -- Gets all the links from all `Layer` objects in the network.
-- `updateState(dataRow)` -- Sets a new state of the `HtmNetwork` given a new row of "HTM State Data" (loosely defined above).
-
-### `HtmNetworkLink` <small>(implements `Renderable`)</small>
-
-Links two `Layer` objects together one-directionally. There may be many links between the same `Layer` objects.
-
-- `LinkType`:`getType()`
-- `Layer`:`getFrom()` -- Where the link data originates.
-- `Layer`:`getTo()` -- Where the link data terminates.
-
-### `CorticalColumn` <small>(implements `Renderable`)</small>
-
-- `Layer[]`:`getLayers()`
-
-### `Layer` <small>(implements `Renderable`)</small>
-
-- `Neuron[]`:`getNeurons()`
-- `MiniColumn[]`:`getMiniColumns()` -- May return `[]` if `Layer` does not define mini columns.
-
-> NOTE: `getNeurons()` will return all `Neurons` in the `Layer`, which can also be retrieved by calling `getMiniColumns()` and subsequently `getNeurons()` on each `MiniColumn` instance.
-
-### `MiniColumn` <small>(implements `Renderable`)</small>
-
-- `MiniColumnState`:`getState()`
-- `Neuron[]`:`getNeurons()`
-
-### `Neuron` <small>(implements `Renderable`)</small>
-
-Atomic unit of Highbrow.
-
-- `NeuronState`:`getState()`
-- `int`:`getIndex()` -- The global index of this cell within the entire `Layer`.
+To see the proposed API, build out the docs as described in the [README](README.md).
 
 * * *
 
-## Notes
+## Developer Notes
 
 1. Synapses and Segments are missing from this model and may be added later.
+1. There is no need for the parent-child relationship in the HTM network, but I have vague recollections that this would have been useful if I'd done it early on in previous projects, and it was easy to do at this point. If it causes complications, we should remove it.

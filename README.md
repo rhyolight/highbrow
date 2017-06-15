@@ -2,7 +2,7 @@
 
 > HTM 3D Translation Library
 
-Currently under development. See outdated design at [DESIGN](DESIGN.md).
+Currently under development. See design at [DESIGN](DESIGN.md) for motivation and notes. For more up-to-date architecture, build docs below.
 
 ## Install
 

@@ -1,5 +1,14 @@
 # Highbrow
 
-> HTM 3D Translation Service
+> HTM 3D Translation Library
 
-Currently under development. See [DESIGN](DESIGN.md).
+Currently under development. See outdated design at [DESIGN](DESIGN.md).
+
+## Install
+
+    npm install .
+
+## Build docs
+
+    ./node_modules/.bin/esdoc
+    open docs/index.html

@@ -1,0 +1,30 @@
+{
+  "name": "highbrow",
+  "version": "0.0.1",
+  "description": "HTM 3D Translation Library",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NumentaCorp/highbrow.git"
+  },
+  "keywords": [
+    "htm",
+    "visualization",
+    "hierarchical temporal memory"
+  ],
+  "author": "Numenta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NumentaCorp/highbrow/issues"
+  },
+  "homepage": "https://github.com/NumentaCorp/highbrow#readme",
+  "devDependencies": {
+    "esdoc": "^0.5.2"
+  }
+}

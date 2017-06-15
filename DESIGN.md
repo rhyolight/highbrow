@@ -47,7 +47,7 @@ Global drawing properties.
 
 > NOTE: Changing the scale of the canvas will affect how tightly packed or spread out the `Points` returned by `Renderable` objects will be. All `Point` objects will have their coordinates multiplied by the scale (default `1.0`).
 
-- `setScale(Point)` -- Sets the scale for drawing.
+- `setScale(float)` -- Sets the scale for drawing.
 - `Point`:`getScale()` -- Get current scale for drawings.
 
 ### `Point`

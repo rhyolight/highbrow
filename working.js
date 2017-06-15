@@ -51,6 +51,9 @@ console.log(Highbrow.getNeuronStates())
 console.log("MiniColumn states:")
 console.log(Highbrow.getMiniColumnStates())
 
+console.log("HTM link types:")
+console.log(Highbrow.getHtmLinkTypes())
+
 network = Highbrow.createHtmNetwork(networkConfiguration)
 
 console.log(network.toString(verbose=true))

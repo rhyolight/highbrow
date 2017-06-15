@@ -1,14 +1,4 @@
 /*
- * TOP LEVEL
- */
-
-class Highbrow {
-    static createHtmNetwork(config) {
-        return new HtmNetwork(config)
-    }
-}
-
-/*
  * STATE ENUMS
  */
 
@@ -22,6 +12,24 @@ const NeuronState = {
 const MiniColumnState = {
     inactive: "inactive",
     active: "active",
+}
+
+/*
+ * TOP LEVEL (this gets exported)
+ */
+
+class Highbrow {
+    static createHtmNetwork(config) {
+        return new HtmNetwork(config)
+    }
+
+    static getNeuronStates() {
+        return NeuronState
+    }
+
+    static getMiniColumnStates() {
+        return MiniColumnState
+    }
 }
 
 /*
@@ -100,13 +108,6 @@ class HtmNetwork extends Renderable {
         return this._corticalColumns
     }
 
-    getNeuronStates() {
-        return NeuronState
-    }
-
-    getMiniColumnStates() {
-        return MiniColumnState
-    }
 }
 
 class HtmNetworkLink extends Renderable {

@@ -45,6 +45,12 @@ let networkConfiguration = {
     }]
 }
 
+console.log("Neuron states:")
+console.log(Highbrow.getNeuronStates())
+
+console.log("MiniColumn states:")
+console.log(Highbrow.getMiniColumnStates())
+
 network = Highbrow.createHtmNetwork(networkConfiguration)
 
 console.log(network.toString(verbose=true))

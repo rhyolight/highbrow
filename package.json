@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rhyolight/highbrow.git"
+    "url": "git+https://github.com/NumentaCorp/highbrow.git"
   },
   "keywords": [
     "htm",
@@ -21,7 +21,10 @@
   "author": "Numenta",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rhyolight/highbrow/issues"
+    "url": "https://github.com/NumentaCorp/highbrow/issues"
   },
-  "homepage": "https://github.com/rhyolight/highbrow#readme"
+  "homepage": "https://github.com/NumentaCorp/highbrow#readme",
+  "devDependencies": {
+    "esdoc": "^0.5.2"
+  }
 }

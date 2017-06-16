@@ -12,38 +12,7 @@ const HtmNetwork = require("./htm-network")
 const HtmNetworkLink = require("./links").HtmNetworkLink
 
 /**
- * This is a static entry class for Highbrow. It gets exported. You can use it
- * like this:
- * @example
- * let Highbrow = require("./src/highbrow")
- *
- *  let networkConfiguration = {
- *      name: "simple network example",
- *      corticalColumns: [{
- *          name: "column 1",
- *          layers: [
- *              {
- *                  name: "layer 1a",
- *                  miniColumns: false,
- *                  neuronCount: 8,
- *                  dimensions: {
- *                      x: 2, y: 2, z: 2
- *                  }
- *              }
- *          ]
- *      }]
- *  }
- *
- *  console.log("Neuron states:")
- *  console.log(Highbrow.getNeuronStates())
- *
- *  console.log("MiniColumn states:")
- *  console.log(Highbrow.getMiniColumnStates())
- *
- *  network = Highbrow.createHtmNetwork(networkConfiguration)
- *
- *  console.log(network.toString(verbose=true))
- *
+ * This is the top-level static entry class for Highbrow.
  */
 class Highbrow {
 

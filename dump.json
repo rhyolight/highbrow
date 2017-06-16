@@ -1,0 +1,2667 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "name": "src/cortical-column.js",
+    "content": "/** @ignore */\nconst Renderable = require(\"./renderable\")\n/** @ignore */\nconst Layer = require(\"./layer\")\n\n/**\n * Represents a cortical column.\n */\nclass CorticalColumn extends Renderable {\n    constructor(config, parent) {\n        super(config, parent)\n        this._layers = this._config.layers.map((config) => {\n            return new Layer(config, this)\n        })\n    }\n\n    /**\n     * @override\n     */\n    getOrigin() {\n        throw new Error(\"Not implemented\")\n    }\n\n    /**\n     * @override\n     */\n    getChildren() {\n        return this.getLayers()\n    }\n\n    getLayers() {\n        return this._layers\n    }\n\n    /**\n     * @return {HtmNetworkLink[]} All the links within this column. Does not\n     *         return inter-column links. You must get those from the parent.\n     */\n    getHtmNetworkLinks() {\n        let columnLinks = this.getCorticalColumns().map((c) => {\n            c.getHtmNetworkLinks()\n        })\n        return [].concat(...columnLinks)\n    }\n}\n\nmodule.exports = CorticalColumn\n",
+    "static": true,
+    "longname": "src/cortical-column.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 1,
+    "kind": "variable",
+    "name": "Renderable",
+    "memberof": "src/cortical-column.js",
+    "static": true,
+    "longname": "src/cortical-column.js~Renderable",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/cortical-column.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 2,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 2,
+    "kind": "variable",
+    "name": "Layer",
+    "memberof": "src/cortical-column.js",
+    "static": true,
+    "longname": "src/cortical-column.js~Layer",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/cortical-column.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 3,
+    "kind": "class",
+    "name": "CorticalColumn",
+    "memberof": "src/cortical-column.js",
+    "static": true,
+    "longname": "src/cortical-column.js~CorticalColumn",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/cortical-column.js",
+    "importStyle": null,
+    "description": "Represents a cortical column.",
+    "lineNumber": 9,
+    "interface": false,
+    "extends": [
+      "Renderable"
+    ]
+  },
+  {
+    "__docId__": 4,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/cortical-column.js~CorticalColumn",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/cortical-column.js~CorticalColumn#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": [
+      {
+        "name": "config",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "parent",
+        "types": [
+          "*"
+        ]
+      }
+    ]
+  },
+  {
+    "__docId__": 5,
+    "kind": "member",
+    "name": "_layers",
+    "memberof": "src/cortical-column.js~CorticalColumn",
+    "static": false,
+    "longname": "src/cortical-column.js~CorticalColumn#_layers",
+    "access": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 6,
+    "kind": "method",
+    "name": "getOrigin",
+    "memberof": "src/cortical-column.js~CorticalColumn",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/cortical-column.js~CorticalColumn#getOrigin",
+    "access": null,
+    "description": "",
+    "lineNumber": 20,
+    "params": [],
+    "override": true
+  },
+  {
+    "__docId__": 7,
+    "kind": "method",
+    "name": "getChildren",
+    "memberof": "src/cortical-column.js~CorticalColumn",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/cortical-column.js~CorticalColumn#getChildren",
+    "access": null,
+    "description": "",
+    "lineNumber": 27,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "override": true
+  },
+  {
+    "__docId__": 8,
+    "kind": "method",
+    "name": "getLayers",
+    "memberof": "src/cortical-column.js~CorticalColumn",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/cortical-column.js~CorticalColumn#getLayers",
+    "access": null,
+    "description": null,
+    "lineNumber": 31,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 9,
+    "kind": "method",
+    "name": "getHtmNetworkLinks",
+    "memberof": "src/cortical-column.js~CorticalColumn",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/cortical-column.js~CorticalColumn#getHtmNetworkLinks",
+    "access": null,
+    "description": "",
+    "lineNumber": 39,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "HtmNetworkLink[]"
+      ],
+      "spread": false,
+      "description": "All the links within this column. Does not\n        return inter-column links. You must get those from the parent."
+    }
+  },
+  {
+    "__docId__": 10,
+    "kind": "file",
+    "name": "src/enums.js",
+    "content": "/**\n * All the states a neuron might be in.\n *\n * @todo Sometimes a neuron will be in more than one state at once. This either\n * needs to define mixed states or Neuron's should be allowed to be in multiple\n * states.\n */\nconst NeuronState = {\n    inactive: \"inactive\",\n    active: \"active\",\n    depolarized: \"depolarized\",\n    predicted: \"predicted\",\n}\n\n/**\n * All the states a mini-column might be in.\n */\nconst MiniColumnState = {\n    inactive: \"inactive\",\n    active: \"active\",\n}\n\n/**\n * The types of links layers can have between them.\n */\nconst HtmLinkType = {\n    apical: \"apical\",\n    distal: \"distal\",\n    proximal: \"proximal\"\n}\n\nmodule.exports = {NeuronState, MiniColumnState, HtmLinkType}\n",
+    "static": true,
+    "longname": "src/enums.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 11,
+    "kind": "variable",
+    "name": "NeuronState",
+    "memberof": "src/enums.js",
+    "static": true,
+    "longname": "src/enums.js~NeuronState",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/enums.js",
+    "importStyle": null,
+    "description": "All the states a neuron might be in.",
+    "lineNumber": 8,
+    "todo": [
+      "Sometimes a neuron will be in more than one state at once. This either\nneeds to define mixed states or Neuron's should be allowed to be in multiple\nstates."
+    ],
+    "type": {
+      "types": [
+        "{\"inactive\": string, \"active\": string, \"depolarized\": string, \"predicted\": string}"
+      ]
+    }
+  },
+  {
+    "__docId__": 12,
+    "kind": "variable",
+    "name": "MiniColumnState",
+    "memberof": "src/enums.js",
+    "static": true,
+    "longname": "src/enums.js~MiniColumnState",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/enums.js",
+    "importStyle": null,
+    "description": "All the states a mini-column might be in.",
+    "lineNumber": 18,
+    "type": {
+      "types": [
+        "{\"inactive\": string, \"active\": string}"
+      ]
+    }
+  },
+  {
+    "__docId__": 13,
+    "kind": "variable",
+    "name": "HtmLinkType",
+    "memberof": "src/enums.js",
+    "static": true,
+    "longname": "src/enums.js~HtmLinkType",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/enums.js",
+    "importStyle": null,
+    "description": "The types of links layers can have between them.",
+    "lineNumber": 26,
+    "type": {
+      "types": [
+        "{\"apical\": string, \"distal\": string, \"proximal\": string}"
+      ]
+    }
+  },
+  {
+    "__docId__": 14,
+    "kind": "file",
+    "name": "src/highbrow.js",
+    "content": "/** @ignore */\nconst NeuronState = require(\"./enums\").NeuronState\n/** @ignore */\nconst MiniColumnState = require(\"./enums\").MiniColumnState\n/** @ignore */\nconst HtmLinkType = require(\"./enums\").HtmLinkType\n/** @ignore */\nconst Renderable = require(\"./renderable\")\n/** @ignore */\nconst HtmNetwork = require(\"./htm-network\")\n/** @ignore */\nconst HtmNetworkLink = require(\"./links\").HtmNetworkLink\n\n/**\n * This is the top-level static entry class for Highbrow.\n */\nclass Highbrow {\n\n    /**\n     * Creates a new {@link HtmNetwork} with the given configuration.\n     * @param {Object} config\n     */\n    static createHtmNetwork(config) {\n        return new HtmNetwork(config)\n    }\n\n    /**\n     * @return {@link NeuronState}\n     */\n    static getNeuronStates() {\n        return NeuronState\n    }\n\n    /**\n     * @return {@link MiniColumnState}\n     */\n    static getMiniColumnStates() {\n        return MiniColumnState\n    }\n\n    /**\n     * @return {@link HtmLinkType}\n     */\n    static getHtmLinkTypes() {\n        return HtmLinkType\n    }\n}\n\nmodule.exports = Highbrow\n",
+    "static": true,
+    "longname": "src/highbrow.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 15,
+    "kind": "variable",
+    "name": "NeuronState",
+    "memberof": "src/highbrow.js",
+    "static": true,
+    "longname": "src/highbrow.js~NeuronState",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/highbrow.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 2,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 16,
+    "kind": "variable",
+    "name": "MiniColumnState",
+    "memberof": "src/highbrow.js",
+    "static": true,
+    "longname": "src/highbrow.js~MiniColumnState",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/highbrow.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 17,
+    "kind": "variable",
+    "name": "HtmLinkType",
+    "memberof": "src/highbrow.js",
+    "static": true,
+    "longname": "src/highbrow.js~HtmLinkType",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/highbrow.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 6,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 18,
+    "kind": "variable",
+    "name": "Renderable",
+    "memberof": "src/highbrow.js",
+    "static": true,
+    "longname": "src/highbrow.js~Renderable",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/highbrow.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 8,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 19,
+    "kind": "variable",
+    "name": "HtmNetwork",
+    "memberof": "src/highbrow.js",
+    "static": true,
+    "longname": "src/highbrow.js~HtmNetwork",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/highbrow.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 10,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 20,
+    "kind": "variable",
+    "name": "HtmNetworkLink",
+    "memberof": "src/highbrow.js",
+    "static": true,
+    "longname": "src/highbrow.js~HtmNetworkLink",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/highbrow.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 12,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 21,
+    "kind": "class",
+    "name": "Highbrow",
+    "memberof": "src/highbrow.js",
+    "static": true,
+    "longname": "src/highbrow.js~Highbrow",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/highbrow.js",
+    "importStyle": null,
+    "description": "This is the top-level static entry class for Highbrow.",
+    "lineNumber": 17,
+    "interface": false
+  },
+  {
+    "__docId__": 22,
+    "kind": "method",
+    "name": "createHtmNetwork",
+    "memberof": "src/highbrow.js~Highbrow",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/highbrow.js~Highbrow.createHtmNetwork",
+    "access": null,
+    "description": "Creates a new {@link HtmNetwork} with the given configuration.",
+    "lineNumber": 23,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "config",
+        "description": ""
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 23,
+    "kind": "method",
+    "name": "getNeuronStates",
+    "memberof": "src/highbrow.js~Highbrow",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/highbrow.js~Highbrow.getNeuronStates",
+    "access": null,
+    "description": "",
+    "lineNumber": 30,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": "{@link NeuronState}"
+    }
+  },
+  {
+    "__docId__": 24,
+    "kind": "method",
+    "name": "getMiniColumnStates",
+    "memberof": "src/highbrow.js~Highbrow",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/highbrow.js~Highbrow.getMiniColumnStates",
+    "access": null,
+    "description": "",
+    "lineNumber": 37,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": "{@link MiniColumnState}"
+    }
+  },
+  {
+    "__docId__": 25,
+    "kind": "method",
+    "name": "getHtmLinkTypes",
+    "memberof": "src/highbrow.js~Highbrow",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/highbrow.js~Highbrow.getHtmLinkTypes",
+    "access": null,
+    "description": "",
+    "lineNumber": 44,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "*"
+      ],
+      "spread": false,
+      "description": "{@link HtmLinkType}"
+    }
+  },
+  {
+    "__docId__": 26,
+    "kind": "file",
+    "name": "src/htm-network.js",
+    "content": "/** @ignore */\nconst Renderable = require(\"./renderable\")\n/** @ignore */\nconst CorticalColumn = require(\"./cortical-column\")\n\n/**\n * Encapsulates all {@link Renderable} HTM components in the network.\n */\nclass HtmNetwork extends Renderable {\n    constructor(config, parent) {\n        super(config, parent)\n        this._corticalColumns = this._config.corticalColumns.map((config) => {\n            return new CorticalColumn(config, this)\n        })\n    }\n\n    /**\n     * This function accepts HTM state data and updates the positions and states\n     * of all {@link Renderable} HTM components.\n     * @param {Object} data - I don't know what this is going to look like yet.\n     */\n    update(data) {\n        throw new Error(\"Not implemented\")\n    }\n\n    /**\n     * @override\n     */\n    getOrigin() {\n        throw new Error(\"Not implemented\")\n    }\n\n    /**\n     * Provides access to all {@link CorticalColumn} children.\n     * @override\n     * @return {CorticalColumn[]} Cortical columns.\n     */\n    getChildren() {\n        return this.getCorticalColumns()\n    }\n\n    /**\n     * @return {CorticalColumn[]} Cortical columns.\n     */\n    getCorticalColumns() {\n        return this._corticalColumns\n    }\n\n    /**\n     * @return {HtmNetworkLink[]} All the links in the whole network.\n     */\n    getHtmNetworkLinks() {\n        let columnLinks = this.getCorticalColumns().map((c) => {\n            c.getHtmNetworkLinks()\n        })\n        return [].concat(...columnLinks)\n    }\n\n}\n\nmodule.exports = HtmNetwork\n",
+    "static": true,
+    "longname": "src/htm-network.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 27,
+    "kind": "variable",
+    "name": "Renderable",
+    "memberof": "src/htm-network.js",
+    "static": true,
+    "longname": "src/htm-network.js~Renderable",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/htm-network.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 2,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 28,
+    "kind": "variable",
+    "name": "CorticalColumn",
+    "memberof": "src/htm-network.js",
+    "static": true,
+    "longname": "src/htm-network.js~CorticalColumn",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/htm-network.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 29,
+    "kind": "class",
+    "name": "HtmNetwork",
+    "memberof": "src/htm-network.js",
+    "static": true,
+    "longname": "src/htm-network.js~HtmNetwork",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/htm-network.js",
+    "importStyle": null,
+    "description": "Encapsulates all {@link Renderable} HTM components in the network.",
+    "lineNumber": 9,
+    "interface": false,
+    "extends": [
+      "Renderable"
+    ]
+  },
+  {
+    "__docId__": 30,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/htm-network.js~HtmNetwork",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/htm-network.js~HtmNetwork#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": [
+      {
+        "name": "config",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "parent",
+        "types": [
+          "*"
+        ]
+      }
+    ]
+  },
+  {
+    "__docId__": 31,
+    "kind": "member",
+    "name": "_corticalColumns",
+    "memberof": "src/htm-network.js~HtmNetwork",
+    "static": false,
+    "longname": "src/htm-network.js~HtmNetwork#_corticalColumns",
+    "access": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 32,
+    "kind": "method",
+    "name": "update",
+    "memberof": "src/htm-network.js~HtmNetwork",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/htm-network.js~HtmNetwork#update",
+    "access": null,
+    "description": "This function accepts HTM state data and updates the positions and states\nof all {@link Renderable} HTM components.",
+    "lineNumber": 22,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "data",
+        "description": "I don't know what this is going to look like yet."
+      }
+    ]
+  },
+  {
+    "__docId__": 33,
+    "kind": "method",
+    "name": "getOrigin",
+    "memberof": "src/htm-network.js~HtmNetwork",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/htm-network.js~HtmNetwork#getOrigin",
+    "access": null,
+    "description": "",
+    "lineNumber": 29,
+    "params": [],
+    "override": true
+  },
+  {
+    "__docId__": 34,
+    "kind": "method",
+    "name": "getChildren",
+    "memberof": "src/htm-network.js~HtmNetwork",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/htm-network.js~HtmNetwork#getChildren",
+    "access": null,
+    "description": "Provides access to all {@link CorticalColumn} children.",
+    "lineNumber": 38,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "CorticalColumn[]"
+      ],
+      "spread": false,
+      "description": "Cortical columns."
+    },
+    "override": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "method",
+    "name": "getCorticalColumns",
+    "memberof": "src/htm-network.js~HtmNetwork",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/htm-network.js~HtmNetwork#getCorticalColumns",
+    "access": null,
+    "description": "",
+    "lineNumber": 45,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "CorticalColumn[]"
+      ],
+      "spread": false,
+      "description": "Cortical columns."
+    }
+  },
+  {
+    "__docId__": 36,
+    "kind": "method",
+    "name": "getHtmNetworkLinks",
+    "memberof": "src/htm-network.js~HtmNetwork",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/htm-network.js~HtmNetwork#getHtmNetworkLinks",
+    "access": null,
+    "description": "",
+    "lineNumber": 52,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "HtmNetworkLink[]"
+      ],
+      "spread": false,
+      "description": "All the links in the whole network."
+    }
+  },
+  {
+    "__docId__": 37,
+    "kind": "file",
+    "name": "src/layer.js",
+    "content": "/** @ignore */\nconst Renderable = require(\"./renderable\")\n/** @ignore */\nconst times = require(\"./utils\").times\n/** @ignore */\nconst NeuronState = require(\"./enums\").NeuronState\n\n/**\n * Represents a cortical layer within a {@link CorticalColumn}.\n */\nclass Layer extends Renderable {\n    constructor(config, parent) {\n        super(config, parent)\n        this._buildLayer()\n    }\n\n    /**\n     * @override\n     */\n    getOrigin() {\n        throw new Error(\"Not implemented\")\n    }\n\n    /**\n     * @override\n     */\n    getChildren() {\n        return this.getNeurons()\n    }\n\n    getNeurons() {\n        return this._neurons\n    }\n\n    /**\n     * @override\n     */\n    toString(verbose = false) {\n        let out = `${this.constructor.name} ${this.getName()}`\n        if (verbose) {\n            let children = this.getChildren()\n            if (children.length) {\n                for (let child of children) {\n                    out += \"\\t\" + child.toString().split(\"\\n\")\n                                       .map(s => \"\\n\\t\" + s)\n                                       .join(\"\")\n                }\n            }\n        } else {\n            out += `contains ${this._neurons.length} neurons`\n        }\n        return out\n    }\n\n    _buildLayer() {\n        this._neurons = []\n        times(this._config.neuronCount) (i =>\n            this._neurons.push(new Neuron({\n                index: i,\n                state: NeuronState.inactive\n            }, this))\n        )\n        if (this._config.miniColumns) {\n            // TODO: implement minicolumns.\n        }\n    }\n\n}\n\n/**\n * Represents a mini-column within a {@link Layer}.\n */\nclass MiniColumn extends Renderable {\n    constructor(config, parent) {\n        super(config, parent)\n    }\n\n    /**\n     * @override\n     */\n    getOrigin() {\n        throw new Error(\"Not implemented\")\n    }\n}\n\n/**\n * Represents a pyramidal neuron. The atomic unit of HTM computation.\n */\nclass Neuron extends Renderable {\n    getOrigin() {\n        throw new Error(\"Not implemented\")\n    }\n\n    /**\n     * @override\n     */\n    getChildren() {\n        return []\n    }\n\n    /**\n     * @override\n     */\n    getName() {\n        return `${this._config.index} (${this._config.state})`\n    }\n}\n\nmodule.exports = Layer\n",
+    "static": true,
+    "longname": "src/layer.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 38,
+    "kind": "variable",
+    "name": "Renderable",
+    "memberof": "src/layer.js",
+    "static": true,
+    "longname": "src/layer.js~Renderable",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 2,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 39,
+    "kind": "variable",
+    "name": "times",
+    "memberof": "src/layer.js",
+    "static": true,
+    "longname": "src/layer.js~times",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 40,
+    "kind": "variable",
+    "name": "NeuronState",
+    "memberof": "src/layer.js",
+    "static": true,
+    "longname": "src/layer.js~NeuronState",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 6,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 41,
+    "kind": "class",
+    "name": "Layer",
+    "memberof": "src/layer.js",
+    "static": true,
+    "longname": "src/layer.js~Layer",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/layer.js",
+    "importStyle": null,
+    "description": "Represents a cortical layer within a {@link CorticalColumn}.",
+    "lineNumber": 11,
+    "interface": false,
+    "extends": [
+      "Renderable"
+    ]
+  },
+  {
+    "__docId__": 42,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/layer.js~Layer",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Layer#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": [
+      {
+        "name": "config",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "parent",
+        "types": [
+          "*"
+        ]
+      }
+    ]
+  },
+  {
+    "__docId__": 43,
+    "kind": "method",
+    "name": "getOrigin",
+    "memberof": "src/layer.js~Layer",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Layer#getOrigin",
+    "access": null,
+    "description": "",
+    "lineNumber": 20,
+    "params": [],
+    "override": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "method",
+    "name": "getChildren",
+    "memberof": "src/layer.js~Layer",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Layer#getChildren",
+    "access": null,
+    "description": "",
+    "lineNumber": 27,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "override": true
+  },
+  {
+    "__docId__": 45,
+    "kind": "method",
+    "name": "getNeurons",
+    "memberof": "src/layer.js~Layer",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Layer#getNeurons",
+    "access": null,
+    "description": null,
+    "lineNumber": 31,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 46,
+    "kind": "method",
+    "name": "toString",
+    "memberof": "src/layer.js~Layer",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Layer#toString",
+    "access": null,
+    "description": "",
+    "lineNumber": 38,
+    "params": [
+      {
+        "name": "verbose",
+        "optional": true,
+        "types": [
+          "boolean"
+        ],
+        "defaultRaw": false,
+        "defaultValue": "false"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "override": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "method",
+    "name": "_buildLayer",
+    "memberof": "src/layer.js~Layer",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Layer#_buildLayer",
+    "access": null,
+    "description": null,
+    "lineNumber": 55,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": []
+  },
+  {
+    "__docId__": 48,
+    "kind": "member",
+    "name": "_neurons",
+    "memberof": "src/layer.js~Layer",
+    "static": false,
+    "longname": "src/layer.js~Layer#_neurons",
+    "access": null,
+    "description": null,
+    "lineNumber": 56,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*[]"
+      ]
+    }
+  },
+  {
+    "__docId__": 49,
+    "kind": "class",
+    "name": "MiniColumn",
+    "memberof": "src/layer.js",
+    "static": true,
+    "longname": "src/layer.js~MiniColumn",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/layer.js",
+    "importStyle": null,
+    "description": "Represents a mini-column within a {@link Layer}.",
+    "lineNumber": 73,
+    "interface": false,
+    "extends": [
+      "Renderable"
+    ]
+  },
+  {
+    "__docId__": 50,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/layer.js~MiniColumn",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~MiniColumn#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 74,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": [
+      {
+        "name": "config",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "parent",
+        "types": [
+          "*"
+        ]
+      }
+    ]
+  },
+  {
+    "__docId__": 51,
+    "kind": "method",
+    "name": "getOrigin",
+    "memberof": "src/layer.js~MiniColumn",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~MiniColumn#getOrigin",
+    "access": null,
+    "description": "",
+    "lineNumber": 81,
+    "params": [],
+    "override": true
+  },
+  {
+    "__docId__": 52,
+    "kind": "class",
+    "name": "Neuron",
+    "memberof": "src/layer.js",
+    "static": true,
+    "longname": "src/layer.js~Neuron",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/layer.js",
+    "importStyle": null,
+    "description": "Represents a pyramidal neuron. The atomic unit of HTM computation.",
+    "lineNumber": 89,
+    "interface": false,
+    "extends": [
+      "Renderable"
+    ]
+  },
+  {
+    "__docId__": 53,
+    "kind": "method",
+    "name": "getOrigin",
+    "memberof": "src/layer.js~Neuron",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Neuron#getOrigin",
+    "access": null,
+    "description": null,
+    "lineNumber": 90,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": []
+  },
+  {
+    "__docId__": 54,
+    "kind": "method",
+    "name": "getChildren",
+    "memberof": "src/layer.js~Neuron",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Neuron#getChildren",
+    "access": null,
+    "description": "",
+    "lineNumber": 97,
+    "params": [],
+    "return": {
+      "types": [
+        "*[]"
+      ]
+    },
+    "override": true
+  },
+  {
+    "__docId__": 55,
+    "kind": "method",
+    "name": "getName",
+    "memberof": "src/layer.js~Neuron",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/layer.js~Neuron#getName",
+    "access": null,
+    "description": "",
+    "lineNumber": 104,
+    "params": [],
+    "return": {
+      "types": [
+        "string"
+      ]
+    },
+    "override": true
+  },
+  {
+    "__docId__": 56,
+    "kind": "file",
+    "name": "src/links.js",
+    "content": "/** @ignore */\nconst Renderable = require(\"./renderable\")\n\n/**\n * Represents data flow between {@link Layer}s.\n */\nclass HtmNetworkLink extends Renderable {\n    /**\n     * @param {Layer} to - Where link data originates.\n     * @param {Layer} from - Where link data terminates.\n     * @param {HtmLinkType} type - Type of link.\n     */\n    constructor(config, parent, from, to, type) {\n        super(config, parent)\n        this._from = from\n        this._to = to\n        this._type = type\n    }\n\n    getOrigin() {\n        throw new Error(\"Not implemented\")\n    }\n\n    /**\n     * @override noop, has no children.\n     */\n    getChildren() {\n        return []\n    }\n\n    /**\n     * @return {Layer} Where the link data originates.\n     */\n    getFrom() {\n        return this.getParent()\n    }\n\n    /**\n     * @return {Layer} Where the link data terminates.\n     */\n    getTo() {\n        return this.getChildren()[0]\n    }\n\n}\n\nmodule.exports = HtmNetworkLink\n",
+    "static": true,
+    "longname": "src/links.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 57,
+    "kind": "variable",
+    "name": "Renderable",
+    "memberof": "src/links.js",
+    "static": true,
+    "longname": "src/links.js~Renderable",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/links.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 2,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 58,
+    "kind": "class",
+    "name": "HtmNetworkLink",
+    "memberof": "src/links.js",
+    "static": true,
+    "longname": "src/links.js~HtmNetworkLink",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/links.js",
+    "importStyle": null,
+    "description": "Represents data flow between {@link Layer}s.",
+    "lineNumber": 7,
+    "interface": false,
+    "extends": [
+      "Renderable"
+    ]
+  },
+  {
+    "__docId__": 59,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/links.js~HtmNetworkLink",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/links.js~HtmNetworkLink#constructor",
+    "access": null,
+    "description": "",
+    "lineNumber": 13,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Layer"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "to",
+        "description": "Where link data originates."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Layer"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "from",
+        "description": "Where link data terminates."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "HtmLinkType"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "type",
+        "description": "Type of link."
+      }
+    ]
+  },
+  {
+    "__docId__": 60,
+    "kind": "member",
+    "name": "_from",
+    "memberof": "src/links.js~HtmNetworkLink",
+    "static": false,
+    "longname": "src/links.js~HtmNetworkLink#_from",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 61,
+    "kind": "member",
+    "name": "_to",
+    "memberof": "src/links.js~HtmNetworkLink",
+    "static": false,
+    "longname": "src/links.js~HtmNetworkLink#_to",
+    "access": null,
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 62,
+    "kind": "member",
+    "name": "_type",
+    "memberof": "src/links.js~HtmNetworkLink",
+    "static": false,
+    "longname": "src/links.js~HtmNetworkLink#_type",
+    "access": null,
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 63,
+    "kind": "method",
+    "name": "getOrigin",
+    "memberof": "src/links.js~HtmNetworkLink",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/links.js~HtmNetworkLink#getOrigin",
+    "access": null,
+    "description": null,
+    "lineNumber": 20,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": []
+  },
+  {
+    "__docId__": 64,
+    "kind": "method",
+    "name": "getChildren",
+    "memberof": "src/links.js~HtmNetworkLink",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/links.js~HtmNetworkLink#getChildren",
+    "access": null,
+    "description": "",
+    "lineNumber": 27,
+    "params": [],
+    "return": {
+      "types": [
+        "*[]"
+      ]
+    },
+    "override": true
+  },
+  {
+    "__docId__": 65,
+    "kind": "method",
+    "name": "getFrom",
+    "memberof": "src/links.js~HtmNetworkLink",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/links.js~HtmNetworkLink#getFrom",
+    "access": null,
+    "description": "",
+    "lineNumber": 34,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Layer"
+      ],
+      "spread": false,
+      "description": "Where the link data originates."
+    }
+  },
+  {
+    "__docId__": 66,
+    "kind": "method",
+    "name": "getTo",
+    "memberof": "src/links.js~HtmNetworkLink",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/links.js~HtmNetworkLink#getTo",
+    "access": null,
+    "description": "",
+    "lineNumber": 41,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Layer"
+      ],
+      "spread": false,
+      "description": "Where the link data terminates."
+    }
+  },
+  {
+    "__docId__": 67,
+    "kind": "file",
+    "name": "src/renderable.js",
+    "content": "/**\n * Abstract base class for renderable objects. All renderable objects must\n * provide the following function implementations:\n * - {@link getOrigin}\n * - {@link getChildren}\n *\n * NOTE: The size of {@link Renderable} objects is not controlled by this API.\n * Clients of this API are responsible for sizing.\n */\nclass Renderable {\n    /**\n     * @param {Object} config - Contains all the details the Renderable needs to\n     *        know to calculate origins for itself and its children.\n     * @param {Renderable} parent - The parent Renderable object (optional).\n     * @param {number} scale - Default 1.0, used for UI clients to scale the\n     *        drawings.\n     * @param {Object} offset - Moves the object in 3D space, will affect all\n     *        point calculations. Can be used to adjust for `scale` changes.\n     * @param {number} offset.x - X coordinate\n     * @param {number} offset.y - Y coordinate\n     * @param {number} offset.z - Z coordinate\n     */\n    constructor(config, parent = undefined, scale = 1.0,\n                offset = {x:0, y:0, z:0}) {\n        this._config = config\n        this._parent = parent\n        this._scale = scale\n        this._offset = offset\n    }\n\n    /**\n     * @return {Object} Configuration object used to create this.\n     */\n    getConfig() {\n        return this._config\n    }\n\n    /**\n     * @abstract Must be overridden in subclasses and provide the point of\n     * origin for this {@link Renderable} to be drawn in 3D.\n     * @return {Object} point with 3D coordinates\n     * @property {number} x x coordinate\n     * @property {number} y y coordinate\n     * @property {number} z z coordinate\n     */\n    getOrigin() {\n        throw new Error(\"Renderable Highbrow objects must provide getOrigin()\")\n    }\n\n    /**\n     * Changing the scale of of a {@link Renderable} will affect the origins of\n     * children. Use {@link setOffset} with this function to reposition this\n     * {@link Renderable}'s children.\n     */\n    setScale(scale = 1.0) {\n        this._scale = scale\n    }\n\n    /**\n     * @return {number} scale See {@link setScale}.\n     */\n    getScale() {\n        return this._scale\n    }\n\n    /**\n     * Moves the object in 3D space, will affect all point calculations. Can be\n     * used to adjust for scale changes.\n     * @param {number} x - X offset\n     * @param {number} y - Y offset\n     * @param {number} z - Z offset\n     */\n    setOffset(x = 0, y = 0, z = 0) {\n        let offset = this._offset\n        offset.x = x\n        offset.y = y\n        offset.z = z\n    }\n\n    /**\n     * @return {Object} offset\n     * @property {number} x x coordinate\n     * @property {number} y y coordinate\n     * @property {number} z z coordinate\n     */\n    getOffset() {\n        return this._offset\n    }\n\n    /**\n     * @return {string} The name of this object.\n     */\n    getName() {\n        return this._config.name\n    }\n\n    getParent() {\n        return this._parent\n    }\n\n    /**\n     * How subclasses provide access to their children.\n     *\n     * @abstract\n     * @return {Renderable[]} children\n     */\n    getChildren() {\n        throw new Error(\n            \"Renderable Highbrow objects must provide getChildren()\"\n        )\n    }\n\n    toString(verbose = false) {\n        let out = `${this.constructor.name} ${this.getName()}`\n        let children = this.getChildren()\n        if (children.length) {\n            for (let child of children) {\n                out += \"\\t\" + child.toString(verbose).split(\"\\n\")\n                                   .map(s => \"\\n\\t\" + s)\n                                   .join(\"\")\n            }\n        }\n        return out\n    }\n\n}\n\nmodule.exports = Renderable\n",
+    "static": true,
+    "longname": "src/renderable.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 68,
+    "kind": "class",
+    "name": "Renderable",
+    "memberof": "src/renderable.js",
+    "static": true,
+    "longname": "src/renderable.js~Renderable",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/renderable.js",
+    "importStyle": null,
+    "description": "Abstract base class for renderable objects. All renderable objects must\nprovide the following function implementations:\n- {@link getOrigin}\n- {@link getChildren}\n\nNOTE: The size of {@link Renderable} objects is not controlled by this API.\nClients of this API are responsible for sizing.",
+    "lineNumber": 10,
+    "interface": false
+  },
+  {
+    "__docId__": 69,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#constructor",
+    "access": null,
+    "description": "",
+    "lineNumber": 23,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "config",
+        "description": "Contains all the details the Renderable needs to\n       know to calculate origins for itself and its children."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Renderable"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "parent",
+        "description": "The parent Renderable object (optional)."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "scale",
+        "description": "Default 1.0, used for UI clients to scale the\n       drawings."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "offset",
+        "description": "Moves the object in 3D space, will affect all\n       point calculations. Can be used to adjust for `scale` changes."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "offset.x",
+        "description": "X coordinate"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "offset.y",
+        "description": "Y coordinate"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "offset.z",
+        "description": "Z coordinate"
+      }
+    ]
+  },
+  {
+    "__docId__": 70,
+    "kind": "member",
+    "name": "_config",
+    "memberof": "src/renderable.js~Renderable",
+    "static": false,
+    "longname": "src/renderable.js~Renderable#_config",
+    "access": null,
+    "description": null,
+    "lineNumber": 25,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 71,
+    "kind": "member",
+    "name": "_parent",
+    "memberof": "src/renderable.js~Renderable",
+    "static": false,
+    "longname": "src/renderable.js~Renderable#_parent",
+    "access": null,
+    "description": null,
+    "lineNumber": 26,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 72,
+    "kind": "member",
+    "name": "_scale",
+    "memberof": "src/renderable.js~Renderable",
+    "static": false,
+    "longname": "src/renderable.js~Renderable#_scale",
+    "access": null,
+    "description": null,
+    "lineNumber": 27,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 73,
+    "kind": "member",
+    "name": "_offset",
+    "memberof": "src/renderable.js~Renderable",
+    "static": false,
+    "longname": "src/renderable.js~Renderable#_offset",
+    "access": null,
+    "description": null,
+    "lineNumber": 28,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 74,
+    "kind": "method",
+    "name": "getConfig",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#getConfig",
+    "access": null,
+    "description": "",
+    "lineNumber": 34,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "Configuration object used to create this."
+    }
+  },
+  {
+    "__docId__": 75,
+    "kind": "method",
+    "name": "getOrigin",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#getOrigin",
+    "access": null,
+    "description": "",
+    "lineNumber": 46,
+    "params": [],
+    "properties": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "x",
+        "description": "x coordinate"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "y",
+        "description": "y coordinate"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "z",
+        "description": "z coordinate"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "point with 3D coordinates"
+    },
+    "abstract": true
+  },
+  {
+    "__docId__": 76,
+    "kind": "method",
+    "name": "setScale",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#setScale",
+    "access": null,
+    "description": "Changing the scale of of a {@link Renderable} will affect the origins of\nchildren. Use {@link setOffset} with this function to reposition this\n{@link Renderable}'s children.",
+    "lineNumber": 55,
+    "params": [
+      {
+        "name": "scale",
+        "optional": true,
+        "types": [
+          "number"
+        ],
+        "defaultRaw": 1,
+        "defaultValue": "1"
+      }
+    ]
+  },
+  {
+    "__docId__": 77,
+    "kind": "member",
+    "name": "_scale",
+    "memberof": "src/renderable.js~Renderable",
+    "static": false,
+    "longname": "src/renderable.js~Renderable#_scale",
+    "access": null,
+    "description": null,
+    "lineNumber": 56,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 78,
+    "kind": "method",
+    "name": "getScale",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#getScale",
+    "access": null,
+    "description": "",
+    "lineNumber": 62,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "number"
+      ],
+      "spread": false,
+      "description": "scale See {@link setScale}."
+    }
+  },
+  {
+    "__docId__": 79,
+    "kind": "method",
+    "name": "setOffset",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#setOffset",
+    "access": null,
+    "description": "Moves the object in 3D space, will affect all point calculations. Can be\nused to adjust for scale changes.",
+    "lineNumber": 73,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "x",
+        "description": "X offset"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "y",
+        "description": "Y offset"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "z",
+        "description": "Z offset"
+      }
+    ]
+  },
+  {
+    "__docId__": 80,
+    "kind": "method",
+    "name": "getOffset",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#getOffset",
+    "access": null,
+    "description": "",
+    "lineNumber": 86,
+    "params": [],
+    "properties": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "x",
+        "description": "x coordinate"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "y",
+        "description": "y coordinate"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "z",
+        "description": "z coordinate"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "offset"
+    }
+  },
+  {
+    "__docId__": 81,
+    "kind": "method",
+    "name": "getName",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#getName",
+    "access": null,
+    "description": "",
+    "lineNumber": 93,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "The name of this object."
+    }
+  },
+  {
+    "__docId__": 82,
+    "kind": "method",
+    "name": "getParent",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#getParent",
+    "access": null,
+    "description": null,
+    "lineNumber": 97,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 83,
+    "kind": "method",
+    "name": "getChildren",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#getChildren",
+    "access": null,
+    "description": "How subclasses provide access to their children.",
+    "lineNumber": 107,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Renderable[]"
+      ],
+      "spread": false,
+      "description": "children"
+    },
+    "abstract": true
+  },
+  {
+    "__docId__": 84,
+    "kind": "method",
+    "name": "toString",
+    "memberof": "src/renderable.js~Renderable",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/renderable.js~Renderable#toString",
+    "access": null,
+    "description": null,
+    "lineNumber": 113,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "params": [
+      {
+        "name": "verbose",
+        "optional": true,
+        "types": [
+          "boolean"
+        ],
+        "defaultRaw": false,
+        "defaultValue": "false"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 85,
+    "kind": "file",
+    "name": "src/utils.js",
+    "content": "/**\n * @ignore Just a counter loop, including iterator.\n */\nconst times = n => f => {\n    let iter = i => {\n        if (i === n) return\n        f (i)\n        iter (i + 1)\n    }\n    return iter (0)\n}\n\nmodule.exports = {times}\n",
+    "static": true,
+    "longname": "src/utils.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 86,
+    "kind": "function",
+    "name": "times",
+    "memberof": "src/utils.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/utils.js~times",
+    "access": null,
+    "export": false,
+    "importPath": "highbrow/src/utils.js",
+    "importStyle": null,
+    "description": "",
+    "lineNumber": 4,
+    "ignore": true,
+    "params": [
+      {
+        "name": "n",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 88,
+    "kind": "external",
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 89,
+    "kind": "external",
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 90,
+    "kind": "external",
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 91,
+    "kind": "external",
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 92,
+    "kind": "external",
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 93,
+    "kind": "external",
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 94,
+    "kind": "external",
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 95,
+    "kind": "external",
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 96,
+    "kind": "external",
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 97,
+    "kind": "external",
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 98,
+    "kind": "external",
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 99,
+    "kind": "external",
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 100,
+    "kind": "external",
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 101,
+    "kind": "external",
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 102,
+    "kind": "external",
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 103,
+    "kind": "external",
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 104,
+    "kind": "external",
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 105,
+    "kind": "external",
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 106,
+    "kind": "external",
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 107,
+    "kind": "external",
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 108,
+    "kind": "external",
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 109,
+    "kind": "external",
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 110,
+    "kind": "external",
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 111,
+    "kind": "external",
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 112,
+    "kind": "external",
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 113,
+    "kind": "external",
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 114,
+    "kind": "external",
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 115,
+    "kind": "external",
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 116,
+    "kind": "external",
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 117,
+    "kind": "external",
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 118,
+    "kind": "external",
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 119,
+    "kind": "external",
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 120,
+    "kind": "external",
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 121,
+    "kind": "external",
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 122,
+    "kind": "external",
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 123,
+    "kind": "external",
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 124,
+    "kind": "external",
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 125,
+    "kind": "external",
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 126,
+    "kind": "external",
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 127,
+    "kind": "external",
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 128,
+    "kind": "external",
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 129,
+    "kind": "external",
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 130,
+    "kind": "external",
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 131,
+    "kind": "external",
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 132,
+    "kind": "external",
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 133,
+    "kind": "external",
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 134,
+    "kind": "external",
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
+    "access": null,
+    "description": "",
+    "lineNumber": 193,
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 136,
+    "kind": "external",
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 137,
+    "kind": "external",
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 138,
+    "kind": "external",
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Element",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 139,
+    "kind": "external",
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Event",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 140,
+    "kind": "external",
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Node",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 141,
+    "kind": "external",
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 142,
+    "kind": "external",
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 143,
+    "kind": "external",
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "lineNumber": 34,
+    "builtinExternal": true
+  }
+]

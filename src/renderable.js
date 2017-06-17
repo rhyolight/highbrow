@@ -110,6 +110,11 @@ class Renderable {
         )
     }
 
+    getChildByName(name) {
+        return this.getChildren().find(child => child.getName() == name)
+    }
+
+
     toString(verbose = false) {
         let out = `${this.constructor.name} ${this.getName()}`
         let children = this.getChildren()

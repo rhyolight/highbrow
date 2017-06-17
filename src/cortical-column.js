@@ -15,6 +15,30 @@ class CorticalColumn extends Renderable {
     }
 
     /**
+     * This function accepts HTM state data and updates the positions and states
+     * of all {@link Renderable} HTM components.
+     * @param {Object} data - I don't know what this is going to look like yet.
+     */
+    update(data) {
+        for (let layerConfig of this.getConfig()['layers']) {
+            // console.log(layerConfig)
+            let layer = this.getChildByName(layerConfig.name)
+            // console.log(layer.toString())
+            let layerData = data[layerConfig.name]
+            let activeCellIndexes = undefined
+            let activeColumnIndexes = undefined
+            // Handles if only cell data is sent
+            if (Array.isArray(layerData)) {
+                activeCellIndexes = layerData
+            } else {
+                activeCellIndexes = layerData.activeCells
+                activeColumnIndexes = layerData.activeColumns
+            }
+            layer.update(activeCellIndexes, activeColumnIndexes)
+        }
+    }
+
+    /**
      * @override
      */
     getOrigin() {

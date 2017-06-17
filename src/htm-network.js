@@ -20,7 +20,13 @@ class HtmNetwork extends Renderable {
      * @param {Object} data - I don't know what this is going to look like yet.
      */
     update(data) {
-        throw new Error("Not implemented")
+        for (let columnConfig of this.getConfig()['corticalColumns']) {
+            // console.log(columnConfig)
+            let column = this.getChildByName(columnConfig.name)
+            // console.log(column.toString())
+            let columnData = data[columnConfig.name]
+            column.update(columnData)
+        }
     }
 
     /**

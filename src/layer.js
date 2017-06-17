@@ -15,6 +15,18 @@ class Layer extends Renderable {
     }
 
     /**
+     * This function accepts HTM state data and updates the positions and states
+     * of all {@link Renderable} HTM components.
+     * @param {Object} data - I don't know what this is going to look like yet.
+     */
+    update(activeCellIndexes, activeColumnIndexes) {
+        console.log(activeCellIndexes)
+        for (let index of activeCellIndexes) {
+            this.getNeuronByIndex(index).state = NeuronState.active
+        }
+    }
+
+    /**
      * @override
      */
     getOrigin() {
@@ -32,6 +44,10 @@ class Layer extends Renderable {
         return this._neurons
     }
 
+    getNeuronByIndex(index) {
+        return this.getNeurons().find(n => n.index == index)
+    }
+
     /**
      * @override
      */
@@ -47,7 +63,7 @@ class Layer extends Renderable {
                 }
             }
         } else {
-            out += `contains ${this._neurons.length} neurons`
+            out += ` contains ${this._neurons.length} neurons`
         }
         return out
     }
@@ -87,6 +103,11 @@ class MiniColumn extends Renderable {
  * Represents a pyramidal neuron. The atomic unit of HTM computation.
  */
 class Neuron extends Renderable {
+    constructor(config, parent) {
+        super(config, parent)
+        this._state = NeuronState.inactive
+    }
+
     getOrigin() {
         throw new Error("Not implemented")
     }
@@ -104,6 +125,11 @@ class Neuron extends Renderable {
     getName() {
         return `${this._config.index} (${this._config.state})`
     }
+
+    set state (state)  { this._state = state }
+    get state () { return this._state }
+    get index () { return this.getConfig()["index"] }
+
 }
 
 module.exports = Layer

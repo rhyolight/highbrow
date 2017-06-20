@@ -8,6 +8,10 @@ Currently under development, does not actually work yet. See design at [DESIGN](
 
     npm install .
 
+## Test
+
+    npm test
+
 ## Build docs
 
     ./node_modules/.bin/esdoc

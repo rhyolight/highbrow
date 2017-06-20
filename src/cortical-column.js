@@ -19,8 +19,8 @@ class CorticalColumn extends Renderable {
     }
 
     /**
-     * This function accepts HTM state data and updates the positions and states
-     * of all {@link Renderable} HTM components.
+     * This function accepts HTM state data and updates the
+     * positions and states of all {@link Renderable} HTM components.
      * @param {Object} data - I don't know what this is going to look like yet.
      */
     update(data) {

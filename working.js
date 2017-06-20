@@ -2,8 +2,8 @@
 // MIT License (see LICENSE)
 // Copyright © 2005—2017 Numenta <http://numenta.com>
 
-let fs = require("fs")
-let Highbrow = require("./src/highbrow")
+const fs = require("fs")
+const Highbrow = require("./src/highbrow")
 
 let networkConfiguration = {
     name: "simple SP / TM network example",
@@ -31,7 +31,8 @@ let networkConfiguration = {
 }
 
 network = Highbrow.createHtmNetwork(networkConfiguration)
-// console.log(network.toString(verbose=true))
+
+// Empty network should contain all inactive cells.
 
 for (line of fs.readFileSync("data/highbrow-out.txt", "utf-8").trim().split("\n")) {
     let data = JSON.parse(line)

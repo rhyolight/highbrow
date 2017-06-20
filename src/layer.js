@@ -21,10 +21,12 @@ class Layer extends Renderable {
     /**
      * This function accepts HTM state data and updates the positions and states
      * of all {@link Renderable} HTM components.
-     * @param {Object} data - I don't know what this is going to look like yet.
+     *
+     * @param {list} activeCellIndexes - integers for indexes of active cells.
+     * @param {list} activeColumnIndexes - integers for indexes of active
+     *        mini-columns.
      */
     update(activeCellIndexes, activeColumnIndexes) {
-        console.log(activeCellIndexes)
         for (let index of activeCellIndexes) {
             this.getNeuronByIndex(index).state = NeuronState.active
         }

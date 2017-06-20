@@ -1,3 +1,7 @@
+// Highbrow
+// MIT License (see LICENSE)
+// Copyright © 2005—2017 Numenta <http://numenta.com>
+
 let fs = require("fs")
 let Highbrow = require("./src/highbrow")
 

@@ -1,3 +1,7 @@
+// Highbrow
+// MIT License (see LICENSE)
+// Copyright © 2005—2017 Numenta <http://numenta.com>
+
 /**
  * Abstract base class for renderable objects. All renderable objects must
  * provide the following function implementations:

@@ -1,10 +1,10 @@
-/** @ignore */
-const Renderable = require("./renderable")
-/** @ignore */
 // Highbrow
 // MIT License (see LICENSE)
 // Copyright © 2005—2017 Numenta <http://numenta.com>
 
+/** @ignore */
+const Renderable = require("./renderable")
+/** @ignore */
 const times = require("./utils").times
 /** @ignore */
 const NeuronState = require("./enums").NeuronState

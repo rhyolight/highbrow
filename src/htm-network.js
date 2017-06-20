@@ -1,10 +1,11 @@
+// Highbrow
+// MIT License (see LICENSE)
+// Copyright © 2005—2017 Numenta <http://numenta.com>
+
 /** @ignore */
 const Renderable = require("./renderable")
 /** @ignore */
 const CorticalColumn = require("./cortical-column")
-// Highbrow
-// MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
 
 /**
  * Encapsulates all {@link Renderable} HTM components in the network.

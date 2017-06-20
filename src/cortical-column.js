@@ -1,10 +1,11 @@
+// Highbrow
+// MIT License (see LICENSE)
+// Copyright © 2005—2017 Numenta <http://numenta.com>
+
 /** @ignore */
 const Renderable = require("./renderable")
 /** @ignore */
 const Layer = require("./layer")
-// Highbrow
-// MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
 
 /**
  * Represents a cortical column.

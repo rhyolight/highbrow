@@ -137,7 +137,7 @@ describe("simple network data update", () => {
     describe("CorticalColumn", () => {
         let column = network.getChildren()[0]
         let originalLayers = column.getLayers()
-        it("calls update on all Layers with active cells", () => {
+        it("calls update on Layer with active cells", () => {
             let timesCalled = 0
             let mockLayer = {
                 update: (activeCells, activeColumns) => {
@@ -162,8 +162,8 @@ describe("simple network data update", () => {
             const activeCells = [0,10,20,30]
             layer.update(activeCells)
             for (const [index, neuron] of layer.getNeurons().entries()) {
-                let shouldBeActive = activeCells.includes(index)
-                let expectedState = shouldBeActive ? NeuronState.active : NeuronState.inactive
+                let expectedState = activeCells.includes(index) ?
+                                    NeuronState.active : NeuronState.inactive
                 expect(neuron.state).to.equal(expectedState)
             }
         })

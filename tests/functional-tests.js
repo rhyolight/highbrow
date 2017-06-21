@@ -9,7 +9,7 @@ const Layer = require("../src/layer")
 const Enums = require("../src/enums")
 const NeuronState = Enums.NeuronState
 
-const config = require("./config")
+const testConfigs = require("./config")
 
 /*
 These are functional tests that build out the network structure and test the
@@ -20,7 +20,7 @@ links between them.
 // Build a simple network and type check its components.
 describe("Highbrow network factory object model", () => {
     describe("when creating a one column one layer Network", () => {
-        let network = Highbrow.createHtmNetwork(config.simple)
+        let network = Highbrow.createHtmNetwork(testConfigs.simple)
         it("returns an HtmNetwork object", () => {
             expect(network).to.be.instanceOf(HtmNetwork)
         })
@@ -61,7 +61,7 @@ describe("Highbrow network factory object model", () => {
 
 // Tests the data update flow.
 describe("simple network data update", () => {
-    let network = Highbrow.createHtmNetwork(config.simple)
+    let network = Highbrow.createHtmNetwork(testConfigs.simple)
     let originalColumns = network._corticalColumns
 
     describe("HtmNetwork", () => {

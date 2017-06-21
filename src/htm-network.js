@@ -16,6 +16,11 @@ class HtmNetwork extends Renderable {
         this._corticalColumns = this._config.corticalColumns.map((config) => {
             return new CorticalColumn(config, this)
         })
+        if (config.hasOwnProperty("origin")) {
+            this._origin = config.origin
+        } else {
+            this._origin = {x: 0, y: 0, z: 0}
+        }
     }
 
     /**
@@ -37,7 +42,7 @@ class HtmNetwork extends Renderable {
      * @override
      */
     getOrigin() {
-        throw new Error("Not implemented")
+        return this._origin
     }
 
     /**

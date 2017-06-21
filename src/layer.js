@@ -35,13 +35,6 @@ class Layer extends Renderable {
     /**
      * @override
      */
-    getOrigin() {
-        throw new Error("Not implemented")
-    }
-
-    /**
-     * @override
-     */
     getChildren() {
         return this.getNeurons()
     }
@@ -96,13 +89,6 @@ class MiniColumn extends Renderable {
     constructor(config, parent) {
         super(config, parent)
     }
-
-    /**
-     * @override
-     */
-    getOrigin() {
-        throw new Error("Not implemented")
-    }
 }
 
 /**
@@ -112,10 +98,6 @@ class Neuron extends Renderable {
     constructor(config, parent) {
         super(config, parent)
         this._state = NeuronState.inactive
-    }
-
-    getOrigin() {
-        throw new Error("Not implemented")
     }
 
     /**

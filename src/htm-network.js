@@ -14,13 +14,10 @@ class HtmNetwork extends Renderable {
     constructor(config, parent) {
         super(config, parent)
         this._corticalColumns = this._config.corticalColumns.map((config) => {
+            // Attach the same origin as the parent, but a clone.
+            config.origin = Object.assign({}, this.getOrigin())
             return new CorticalColumn(config, this)
         })
-        if (config.hasOwnProperty("origin")) {
-            this._origin = config.origin
-        } else {
-            this._origin = {x: 0, y: 0, z: 0}
-        }
     }
 
     /**
@@ -36,13 +33,6 @@ class HtmNetwork extends Renderable {
             let columnData = data[columnConfig.name]
             column.update(columnData)
         }
-    }
-
-    /**
-     * @override
-     */
-    getOrigin() {
-        return this._origin
     }
 
     /**

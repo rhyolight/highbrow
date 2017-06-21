@@ -27,8 +27,14 @@ class Layer extends Renderable {
      *        mini-columns.
      */
     update(activeCellIndexes, activeColumnIndexes) {
-        for (let index of activeCellIndexes) {
-            this.getNeuronByIndex(index).state = NeuronState.active
+        let index = 0
+        for (let neuron of this.getNeurons()) {
+            if (activeCellIndexes.includes(index)) {
+                neuron.state = NeuronState.active
+            } else {
+                neuron.state = NeuronState.inactive
+            }
+            index++
         }
     }
 
@@ -111,7 +117,7 @@ class Neuron extends Renderable {
      * @override
      */
     getName() {
-        return `${this._config.index} (${this._config.state})`
+        return `${this.index} (${this.state})`
     }
 
     set state (state)  { this._state = state }

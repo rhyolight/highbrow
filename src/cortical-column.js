@@ -46,13 +46,6 @@ class CorticalColumn extends Renderable {
     /**
      * @override
      */
-    getOrigin() {
-        throw new Error("Not implemented")
-    }
-
-    /**
-     * @override
-     */
     getChildren() {
         return this.getLayers()
     }

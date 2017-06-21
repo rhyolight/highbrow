@@ -27,16 +27,15 @@ class Layer extends Renderable {
      *        mini-columns.
      */
     update(activeCellIndexes, activeColumnIndexes) {
-        for (let index of activeCellIndexes) {
-            this.getNeuronByIndex(index).state = NeuronState.active
+        let index = 0
+        for (let neuron of this.getNeurons()) {
+            if (activeCellIndexes.includes(index)) {
+                neuron.state = NeuronState.active
+            } else {
+                neuron.state = NeuronState.inactive
+            }
+            index++
         }
-    }
-
-    /**
-     * @override
-     */
-    getOrigin() {
-        throw new Error("Not implemented")
     }
 
     /**
@@ -96,13 +95,6 @@ class MiniColumn extends Renderable {
     constructor(config, parent) {
         super(config, parent)
     }
-
-    /**
-     * @override
-     */
-    getOrigin() {
-        throw new Error("Not implemented")
-    }
 }
 
 /**
@@ -112,10 +104,6 @@ class Neuron extends Renderable {
     constructor(config, parent) {
         super(config, parent)
         this._state = NeuronState.inactive
-    }
-
-    getOrigin() {
-        throw new Error("Not implemented")
     }
 
     /**
@@ -129,7 +117,7 @@ class Neuron extends Renderable {
      * @override
      */
     getName() {
-        return `${this._config.index} (${this._config.state})`
+        return `${this.index} (${this.state})`
     }
 
     set state (state)  { this._state = state }

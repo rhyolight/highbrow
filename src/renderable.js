@@ -2,6 +2,8 @@
 // MIT License (see LICENSE)
 // Copyright © 2005—2017 Numenta <http://numenta.com>
 
+const DEFAULT_ORIGIN = {x: 0, y: 0, z: 0}
+
 /**
  * Abstract base class for renderable objects. All renderable objects must
  * provide the following function implementations:
@@ -30,6 +32,11 @@ class Renderable {
         this._parent = parent
         this._scale = scale
         this._offset = offset
+        if (config.hasOwnProperty("origin")) {
+            this._origin = config.origin
+        } else {
+            this._origin = DEFAULT_ORIGIN
+        }
     }
 
     /**
@@ -40,15 +47,15 @@ class Renderable {
     }
 
     /**
-     * @abstract Must be overridden in subclasses and provide the point of
-     * origin for this {@link Renderable} to be drawn in 3D.
+     * Point of origin for this {@link Renderable} to be drawn in 3D.
+     *
      * @return {Object} point with 3D coordinates
      * @property {number} x x coordinate
      * @property {number} y y coordinate
      * @property {number} z z coordinate
      */
     getOrigin() {
-        throw new Error("Renderable Highbrow objects must provide getOrigin()")
+        return this._origin
     }
 
     /**

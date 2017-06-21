@@ -9,77 +9,25 @@ const Layer = require("../src/layer")
 const Enums = require("../src/enums")
 const NeuronState = Enums.NeuronState
 
-const simple = {
-    name: "simple network",
-    corticalColumns: [{
-        name: "column 1",
-        layers: [
-            {
-                name: "layer 1",
-                miniColumns: false,
-                neuronCount: 100,
-                dimensions: {
-                    x: 10, y: 10, z: 1
-                }
-            }
-        ]
-    }]
-}
-const complex = {
-    name: "simple network",
-    corticalColumns: [{
-        name: "column 1",
-        layers: [
-            {
-                name: "layer 1-1",
-                miniColumns: false,
-                neuronCount: 100,
-                dimensions: {
-                    x: 10, y: 10, z: 1
-                }
-            }, {
-                name: "layer 1-2",
-                miniColumns: true,
-                neuronCount: 4096,
-                dimensions: {
-                    x: 30, y: 35, z: 4
-                }
-            }
-        ]
-    }, {
-        name: "column 2",
-        layers: [
-            {
-                name: "layer 2-1",
-                miniColumns: false,
-                neuronCount: 100,
-                dimensions: {
-                    x: 10, y: 10, z: 1
-                }
-            }, {
-                name: "layer 2-2",
-                miniColumns: true,
-                neuronCount: 4096,
-                dimensions: {
-                    x: 30, y: 35, z: 4
-                }
-            }
-        ]
-    }]
-}
+const testConfigs = require("./config")
 
+/*
+These are functional tests that build out the network structure and test the
+links between them.
+*/
+
+
+// Build a simple network and type check its components.
 describe("Highbrow network factory object model", () => {
     describe("when creating a one column one layer Network", () => {
-
-        let network = Highbrow.createHtmNetwork(simple)
+        let network = Highbrow.createHtmNetwork(testConfigs.simple)
         it("returns an HtmNetwork object", () => {
             expect(network).to.be.instanceOf(HtmNetwork)
         })
 
         describe("HtmNetwork", () => {
             let columnTester = (columns) => {
-                expect(columns).to.be.instanceOf(Array)
-                expect(columns).to.be.length(1)
+                expect(columns).to.be.an('array').that.has.lengthOf(1)
                 let column = columns[0]
                 expect(column).to.be.instanceOf(CorticalColumn)
                 expect(column.getName()).to.equal("column 1")
@@ -95,8 +43,7 @@ describe("Highbrow network factory object model", () => {
             describe("CorticalColumn", () => {
                 let column = network.getChildren()[0]
                 let layerTester = (layers) => {
-                    expect(layers).to.be.instanceOf(Array)
-                    expect(layers).to.be.length(1)
+                    expect(layers).to.be.an('array').that.has.lengthOf(1)
                     let layer = layers[0]
                     expect(layer).to.be.instanceOf(Layer)
                     expect(layer.getName()).to.equal("layer 1")
@@ -112,8 +59,9 @@ describe("Highbrow network factory object model", () => {
     })
 })
 
+// Tests the data update flow.
 describe("simple network data update", () => {
-    let network = Highbrow.createHtmNetwork(simple)
+    let network = Highbrow.createHtmNetwork(testConfigs.simple)
     let originalColumns = network._corticalColumns
 
     describe("HtmNetwork", () => {
@@ -122,14 +70,16 @@ describe("simple network data update", () => {
             let mockColumn = {
                 update: (data) => {
                     timesCalled++
-                    expect(data).to.equal(mockData["column 1"])
+                    expect(data).to.deep.equal({"layer1":"mockLayerData"})
                 },
                 getName: () => "column 1"
             }
+            // Injecting mock column.
             network._corticalColumns = [mockColumn]
             const mockData = {"column 1":{"layer1":"mockLayerData"}}
             network.update(mockData)
             expect(timesCalled).to.equal(1)
+            // Replacing mock column (do no harm).
             network._corticalColumns = originalColumns
         })
     })

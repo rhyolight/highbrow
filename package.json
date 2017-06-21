@@ -7,7 +7,7 @@
     "example": "examples"
   },
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha"
+    "test": "nyc --reporter=html --reporter=text mocha tests --recursive"
   },
   "repository": {
     "type": "git",

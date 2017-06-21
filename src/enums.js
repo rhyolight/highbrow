@@ -13,7 +13,6 @@ const NeuronState = {
     inactive: "inactive",
     active: "active",
     depolarized: "depolarized",
-    predicted: "predicted",
 }
 
 /**
@@ -30,7 +29,7 @@ const MiniColumnState = {
 const HtmLinkType = {
     apical: "apical",
     distal: "distal",
-    proximal: "proximal"
+    proximal: "proximal",
 }
 
 module.exports = {NeuronState, MiniColumnState, HtmLinkType}

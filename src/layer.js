@@ -9,6 +9,32 @@ const times = require("./utils").times
 /** @ignore */
 const NeuronState = require("./enums").NeuronState
 
+/*
+ * Active cell indices returned from HTM systems generally are ordered with
+ * mini-columns grouped together. Since we want to render mini-columns as
+ * depth, they need to be in the Z dimension, and that's why we translate
+ * the cell indices into the z dimension first.
+ *
+ * @param {integer} idx - global HTM cell index for neuron within layer
+ * @param {integer} rx - range of the x dimension
+ * @param {integer} ry - range of the y dimension
+ * @param {integer} rz - range of the z dimension
+ * @return {Object} point with 3D coordinates
+ * @property {number} x x coordinate
+ * @property {number} y y coordinate
+ * @property {number} z z coordinate
+ */
+ /** @ignore */
+function getXyzFromIndex(idx, rx, ry, rz) {
+    var result = {}
+    var a = (rz * rx)
+    result.y = Math.floor(idx / a)
+    var b = idx - a * result.y
+    result.x = Math.floor(b / rz)
+    result.z = b % rz
+    return result
+}
+
 /**
  * Represents a cortical layer within a {@link CorticalColumn}.
  */
@@ -78,7 +104,13 @@ class Layer extends Renderable {
         times(this._config.neuronCount) (i =>
             this._neurons.push(new Neuron({
                 index: i,
-                state: NeuronState.inactive
+                state: NeuronState.inactive,
+                origin: getXyzFromIndex(
+                    i,
+                    this._config.dimensions.x,
+                    this._config.dimensions.y,
+                    this._config.dimensions.z,
+                )
             }, this))
         )
         if (this._config.miniColumns) {
@@ -107,7 +139,8 @@ class Neuron extends Renderable {
     }
 
     /**
-     * @override
+     * @override NOOP
+     * @returns [] empty list
      */
     getChildren() {
         return []
@@ -120,8 +153,19 @@ class Neuron extends Renderable {
         return `${this.index} (${this.state})`
     }
 
+    /**
+     * @override
+     */
+    toString() {
+        let o = this.getOrigin()
+        return `${this.getName()} at [${o.x}, ${o.y}, ${o.z}]`
+    }
+
     set state (state)  { this._state = state }
+
     get state () { return this._state }
+
+    // This index only changes if the config changes (unlikely).
     get index () { return this.getConfig()["index"] }
 
 }

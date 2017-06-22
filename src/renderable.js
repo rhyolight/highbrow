@@ -2,6 +2,7 @@
 // MIT License (see LICENSE)
 // Copyright © 2005—2017 Numenta <http://numenta.com>
 
+/** @ignore */
 const DEFAULT_ORIGIN = {x: 0, y: 0, z: 0}
 
 /**

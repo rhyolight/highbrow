@@ -1,4 +1,10 @@
 let path = require("path")
+let fs = require("fs")
+
+let pkg = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "package.json"), "utf-8")
+)
+let version = pkg.version
 
 module.exports = {
     entry: [
@@ -19,6 +25,6 @@ module.exports = {
     },
     output: {
         path: __dirname + "/bin",
-        filename: "highbrow.bundle.js"
+        filename: `highbrow-${version}.bundle.js`
     }
 };

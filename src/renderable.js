@@ -8,7 +8,6 @@ const DEFAULT_ORIGIN = {x: 0, y: 0, z: 0}
 /**
  * Abstract base class for renderable objects. All renderable objects must
  * provide the following function implementations:
- * - {@link getOrigin}
  * - {@link getChildren}
  *
  * NOTE: The size of {@link Renderable} objects is not controlled by this API.
@@ -115,7 +114,7 @@ class Renderable {
     }
 
     /**
-     * How subclasses provide access to their children.
+     * How subclasses provide access to their {@link Renderable} children.
      *
      * @abstract
      * @return {Renderable[]} children

@@ -13,13 +13,13 @@
         <script src="https://code.jquery.com/jquery-3.1.0.slim.min.js"></script>
         <script src="../bin/cell-viz-1.0.0.js"></script>
         <script src="../bin/highbrow.bundle.js"></script>
-        <script src="htm-highbrow-cells.js"></script>
+        <script src="htm-highbrow-layer.js"></script>
 
         <script>
 
             $(function() {
                 const dimensions = {
-                    x: 20, y: 20, z: 30
+                    x: 10, y: 10, z: 1
                 }
                 const simple = {
                     name: "simple network",
@@ -36,41 +36,28 @@
                     }]
                 }
                 var network = Highbrow.createHtmNetwork(simple)
-                var cells = new HtmHighbrowCells(network)
+                var layer = network.getCorticalColumns()[0].getLayers()[0]
+                var cellviz = new SingleLayerVisualization(new HtmHighbrowLayer(layer));
 
-                // The HtmCellVisualization object handles all interactions with the DOM.
-                var cellviz = new SingleLayerVisualization(cells);
-                // var cellviz = new SingleLayerVisualization(cells, {offset: {z: -30}});
-
-                // cells.update(0, 0, 0, {color: 1});
-                // cells.update(cells.getX() - 1, cells.getY() - 1, cells.getZ() - 1, {color: 2});
-
-                // colorCellsRandomly(cells);
+                animateCells(layer);
 
                 // Renders the canvas with empty cells into the DOM and canvas.
                 cellviz.render({initialDistance: 100});
 
-                // setInterval(function() {
-                //     colorCellsRandomly(cells);
-                //     cellviz.redraw();
-                // }, 500);
+                setInterval(function() {
+                    animateCells(layer);
+                    cellviz.redraw();
+                }, 500);
 
-                // function randomHexColor() {
-                //     return Math.floor(Math.random()*16777215);
-                // }
-                //
-                // function colorCellsRandomly(myCells) {
-                //     for (var cx = 0; cx < cells.getX(); cx++) {
-                //         for (var cy = 0; cy < cells.getY(); cy++) {
-                //             for (var cz = 0; cz < cells.getZ(); cz++) {
-                //                 myCells.update(
-                //                     cx, cy, cz,
-                //                     {color: randomHexColor()}
-                //                 );
-                //             }
-                //         }
-                //     }
-                // }
+                function animateCells(layer) {
+                    for (let neuron of layer.getNeurons()) {
+                        if (Math.random() >= 0.5) {
+                            neuron.activate()
+                        } else {
+                            neuron.deactivate()
+                        }
+                    }
+                }
 
             });
 

@@ -78,7 +78,21 @@ describe("Layer Unit Tests", () => {
             }
         })
 
-    })
+        it("allows fetching cells by xyz coordinates", () => {
+            for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
+                for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
+                    for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
+                        let globalIndex = zcount * config.dimensions.x * config.dimensions.y
+                                        + xcount * config.dimensions.y
+                                        + ycount
+                        let neuronByGlobalIndex = layer.getNeuronByIndex(globalIndex)
+                        let neuronByXyz = layer.getNeuronByXyz(xcount, ycount, zcount)
+                        expect(neuronByGlobalIndex).to.be.equal(neuronByXyz)
+                    }
+                }
+            }
+        })
 
+    })
 
 })

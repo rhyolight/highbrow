@@ -356,6 +356,12 @@ class Layer extends Renderable {
         return this.getNeurons().find(n => n.index == index);
     }
 
+    getNeuronByXyz(x, y, z) {
+        var dims = this.getDimensions();
+        let globalIndex = z * dims.x * dims.y + x * dims.y + y;
+        return this.getNeuronByIndex(globalIndex);
+    }
+
     /**
      * @override
      */
@@ -406,6 +412,14 @@ class MiniColumn extends Renderable {
 class Neuron extends Renderable {
     constructor(config, parent) {
         super(config, parent);
+        this._state = NeuronState.inactive;
+    }
+
+    activate() {
+        this._state = NeuronState.active;
+    }
+
+    deactivate() {
         this._state = NeuronState.inactive;
     }
 
@@ -719,8 +733,9 @@ class Highbrow {
         return HtmLinkType;
     }
 }
-module.exports = Highbrow;
-if (window) {
+if (typeof window === 'undefined') {
+    module.exports = Highbrow;
+} else {
     window.Highbrow = Highbrow;
 }
 

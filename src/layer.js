@@ -11,9 +11,9 @@ const NeuronState = require("./enums").NeuronState
 
 /*
  * Active cell indices returned from HTM systems generally are ordered with
- * mini-columns grouped together. Since we want to render mini-columns as
- * depth, they need to be in the Z dimension, and that's why we translate
- * the cell indices into the z dimension first.
+ * mini-columns grouped together. Since we want to render mini-columns from top
+ * to bottom, they need to be in the Y dimension, and that's why we translate
+ * the cell indices into the Y dimension first.
  *
  * @param {integer} idx - global HTM cell index for neuron within layer
  * @param {integer} rx - range of the x dimension
@@ -27,11 +27,11 @@ const NeuronState = require("./enums").NeuronState
  /** @ignore */
 function getXyzFromIndex(idx, rx, ry, rz) {
     var result = {}
-    var a = (rz * rx)
-    result.y = Math.floor(idx / a)
-    var b = idx - a * result.y
+    var a = (rz * ry)
+    result.z = Math.floor(idx / a)
+    var b = idx - a * result.z
     result.x = Math.floor(b / rz)
-    result.z = b % rz
+    result.y = b % ry
     return result
 }
 
@@ -99,6 +99,9 @@ class Layer extends Renderable {
         return out
     }
 
+    /*
+     * Builds out the layer from scratch, using an Z,X,Y structure
+     */
     _buildLayer() {
         this._neurons = []
         times(this._config.neuronCount) (i =>

@@ -16,3 +16,9 @@ Currently under development, does not actually work yet. See design at [DESIGN](
 
     ./node_modules/.bin/esdoc
     open docs/index.html
+
+## Build Bundle
+
+    npm run build
+
+Installs into `bin/highbrow.bundle.js`.

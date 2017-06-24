@@ -57,41 +57,18 @@ describe("Layer Unit Tests", () => {
 
         /*
         Active cell indices returned from HTM systems generally are ordered with
-        mini-columns grouped together. Since we want to render mini-columns as
-        depth, they need to be in the Z dimension, and that's why we translate
-        the cell indices into the z dimension first.
+        mini-columns grouped together. Since we want to render mini-columns from
+        bottom to top, they need to be in the Y dimension, and that's why we
+        translate the cell indices into the Y dimension first.
         */
 
-        it("has z as the first dimension", () => {
+        it("has y,x,z dimensional order", () => {
             for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
-                let neuron = layer.getNeuronByIndex(zcount)
-                expect(neuron.getOrigin()).to.deep.equal({
-                    x: 0, y: 0, z: zcount
-                })
-            }
-        })
-
-        it("has x as the second dimension", () => {
-            for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
-                for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
-                    let globalIndex = xcount * config.dimensions.z + zcount
-                    let neuron = layer.getNeuronByIndex(globalIndex)
-                    // console.log(neuron.toString())
-                    // console.log("xcount: %s zcount: %s", xcount, zcount)
-                    expect(neuron.getOrigin()).to.deep.equal({
-                        x: xcount, y: 0, z: zcount
-                    })
-                }
-            }
-        })
-
-        it("has y as the third dimension", () => {
-            for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
                 for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
-                    for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
-                        let globalIndex = ycount * config.dimensions.x * config.dimensions.z
-                                        + xcount * config.dimensions.z
-                                        + zcount
+                    for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
+                        let globalIndex = zcount * config.dimensions.x * config.dimensions.y
+                                        + xcount * config.dimensions.y
+                                        + ycount
                         let neuron = layer.getNeuronByIndex(globalIndex)
                         expect(neuron.getOrigin()).to.deep.equal({
                             x: xcount, y: ycount, z: zcount

@@ -7,6 +7,7 @@
     "example": "examples"
   },
   "scripts": {
+    "build": "webpack",
     "test": "nyc --reporter=html --reporter=text mocha tests --recursive"
   },
   "repository": {
@@ -25,9 +26,13 @@
   },
   "homepage": "https://github.com/NumentaCorp/highbrow#readme",
   "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.0",
+    "babel-preset-env": "^1.5.2",
     "chai": "4.0.2",
     "esdoc": "^0.5.2",
     "mocha": "3.4.2",
-    "nyc": "^11.0.2"
+    "nyc": "^11.0.2",
+    "webpack": "^3.0.0"
   }
 }

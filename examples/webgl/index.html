@@ -50,6 +50,12 @@
                 }, 500);
 
                 function animateCells(layer) {
+                    // We're going straight to the Highbrow Layer object to
+                    // update neuron states instead of through the rendering
+                    // adapter, which has an update() function but I'm not using
+                    // it yet. I'm actually not sure we even need the update()
+                    // when we can access all the highbrow state from the layer
+                    // directly and change it as we like.
                     for (let neuron of layer.getNeurons()) {
                         if (Math.random() >= 0.98) {
                             neuron.activate()

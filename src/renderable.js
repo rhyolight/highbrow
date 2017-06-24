@@ -47,6 +47,10 @@ class Renderable {
         return this._config
     }
 
+    getDimensions() {
+        return this._config.dimensions
+    }
+
     /**
      * Point of origin for this {@link Renderable} to be drawn in 3D.
      *

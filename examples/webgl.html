@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8>
+        <title>Highbrow WEBGL Example</title>
+        <style>
+            body { margin: 0; }
+            canvas { width: 100%; height: 100% }
+        </style>
+    </head>
+    <body>
+
+        <script src="https://code.jquery.com/jquery-3.1.0.slim.min.js"></script>
+        <script src="../bin/cell-viz-1.0.0.js"></script>
+        <script src="../bin/highbrow.bundle.js"></script>
+        <script src="htm-highbrow-layer.js"></script>
+
+        <script>
+
+            $(function() {
+                const dimensions = {
+                    x: 10, y: 10, z: 1
+                }
+                const simple = {
+                    name: "simple network",
+                    corticalColumns: [{
+                        name: "column 1",
+                        layers: [
+                            {
+                                name: "layer 1",
+                                miniColumns: false,
+                                neuronCount: dimensions.x * dimensions.y * dimensions.z,
+                                dimensions: dimensions
+                            }
+                        ]
+                    }]
+                }
+                var network = Highbrow.createHtmNetwork(simple)
+                var layer = network.getCorticalColumns()[0].getLayers()[0]
+                var cellviz = new SingleLayerVisualization(new HtmHighbrowLayer(layer));
+
+                animateCells(layer);
+
+                // Renders the canvas with empty cells into the DOM and canvas.
+                cellviz.render({initialDistance: 100});
+
+                setInterval(function() {
+                    animateCells(layer);
+                    cellviz.redraw();
+                }, 500);
+
+                function animateCells(layer) {
+                    for (let neuron of layer.getNeurons()) {
+                        if (Math.random() >= 0.5) {
+                            neuron.activate()
+                        } else {
+                            neuron.deactivate()
+                        }
+                    }
+                }
+
+            });
+
+        </script>
+    </body>
+</html>

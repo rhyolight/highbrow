@@ -49,5 +49,8 @@ class Highbrow {
         return HtmLinkType
     }
 }
-
-module.exports = Highbrow
+if (typeof window === 'undefined') {
+    module.exports = Highbrow
+} else {
+    window.Highbrow = Highbrow
+}

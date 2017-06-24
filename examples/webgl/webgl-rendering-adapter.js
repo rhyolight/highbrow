@@ -37,11 +37,3 @@ HtmHighbrowLayer.prototype.getCellValue = function(x, y, z) {
     }
     return out;
 };
-
-/**
- * Send in one object to update the whole layer state. If the data doesn't match
- * the structure of the layer, bad things will probably happen.
- */
-HtmHighbrowLayer.prototype.update = function(data) {
-    this.network.update(data)
-};

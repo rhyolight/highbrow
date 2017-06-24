@@ -19,7 +19,7 @@
 
             $(function() {
                 const dimensions = {
-                    x: 10, y: 10, z: 1
+                    x: 100, y: 100, z: 1
                 }
                 const simple = {
                     name: "simple network",
@@ -42,7 +42,7 @@
                 animateCells(layer);
 
                 // Renders the canvas with empty cells into the DOM and canvas.
-                cellviz.render({initialDistance: 100});
+                cellviz.render();
 
                 setInterval(function() {
                     animateCells(layer);
@@ -51,7 +51,7 @@
 
                 function animateCells(layer) {
                     for (let neuron of layer.getNeurons()) {
-                        if (Math.random() >= 0.5) {
+                        if (Math.random() >= 0.98) {
                             neuron.activate()
                         } else {
                             neuron.deactivate()

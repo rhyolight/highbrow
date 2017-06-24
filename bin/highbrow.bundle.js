@@ -353,7 +353,7 @@ class Layer extends Renderable {
     }
 
     getNeuronByIndex(index) {
-        return this.getNeurons().find(n => n.index == index);
+        return this.getNeurons()[index];
     }
 
     getNeuronByXyz(x, y, z) {
@@ -386,7 +386,6 @@ class Layer extends Renderable {
     _buildLayer() {
         this._neurons = [];
         times(this._config.neuronCount)(i => this._neurons.push(new Neuron({
-            index: i,
             state: NeuronState.inactive,
             origin: getXyzFromIndex(i, this._config.dimensions.x, this._config.dimensions.y, this._config.dimensions.z)
         }, this)));

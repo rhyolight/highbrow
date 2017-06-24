@@ -65,20 +65,40 @@ class Layer extends Renderable {
     }
 
     /**
+     * Will return a list of {@link Neuron}s in global cell order.
      * @override
+     * @returns {Neuron[]} all the neurons in global cell order
      */
     getChildren() {
         return this.getNeurons()
     }
 
+    /**
+     * Will return a list of {@link Neuron}s in global cell order.
+     * @override
+     * @returns {Neuron[]} all the neurons in global cell order
+     */
     getNeurons() {
         return this._neurons
     }
 
+    /**
+     * Get {@link Neuron} by global cell index.
+     * @param {int} index - index of neuron to get
+     * @returns {Neuron} the neuron at specified index
+     * @throws {KeyError} if invalid index
+     */
     getNeuronByIndex(index) {
-        return this.getNeurons().find(n => n.index == index)
+        return this.getNeurons()[index]
     }
 
+    /**
+     * Get {@link Neuron} by 3D coordinate.
+     * @param {number} x - x
+     * @param {number} y - y
+     * @param {number} z - z
+     * @returns {Neuron} the neuron at specified index
+     */
     getNeuronByXyz(x, y, z) {
         var dims = this.getDimensions()
         let globalIndex = z * dims.x * dims.y
@@ -108,13 +128,12 @@ class Layer extends Renderable {
     }
 
     /*
-     * Builds out the layer from scratch, using an Z,X,Y structure
+     * Builds out the layer from scratch.
      */
     _buildLayer() {
         this._neurons = []
         times(this._config.neuronCount) (i =>
             this._neurons.push(new Neuron({
-                index: i,
                 state: NeuronState.inactive,
                 origin: getXyzFromIndex(
                     i,

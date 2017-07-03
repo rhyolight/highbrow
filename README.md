@@ -27,7 +27,7 @@ Installs into `bin/highbrow.bundle.js`.
 
 ### WEBGL
 
-There is a simple WEBGL example in [`examples/webgl`](examples/webgl/). The [`webgl-rendering-adapter.js`](examples/webgl/webgl-rendering-adapter.js) interfaces with [cell-viz](https://github.com/numenta/cell-viz), an existing platform I've used for HTM cell rendering in THREE.JS. It currently only models one layer and does not yet apply scale or offset, but if you open [`examples/webgl/index.html`](examples/webgl/index.html) in a browser and hold `s` to strafe backward you can see the animated cells.
+There is a simple WEBGL example in [`examples/webgl`](examples/webgl/). This example interfaces with [cell-viz](https://github.com/numenta/cell-viz), an existing platform I've used for HTM cell rendering in THREE.JS. It currently only models one layer and does not yet apply offset, but if you open [`examples/webgl/index.html`](examples/webgl/index.html) in a browser and hold `s` to strafe backward you can see the animated cells with global indices and XYZ positions rendered upon them.
 
 #### Controls
 

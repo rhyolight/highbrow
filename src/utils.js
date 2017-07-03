@@ -1,6 +1,6 @@
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /**
  * @ignore Just a counter loop, including iterator.

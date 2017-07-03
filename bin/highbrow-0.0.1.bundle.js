@@ -73,20 +73,22 @@
 
 /** @ignore */
 const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
+    /** @ignore */
+};const DEFAULT_SCALE = 1.0;
 
-    /**
-     * Abstract base class for renderable objects. All renderable objects must
-     * provide the following function implementations:
-     * - {@link getOrigin}
-     * - {@link getChildren}
-     *
-     * NOTE: The size of {@link Renderable} objects is not controlled by this API.
-     * Clients of this API are responsible for sizing.
-     */
-};class Renderable {
+/**
+ * Abstract base class for renderable objects. All renderable objects must
+ * provide the following function implementations:
+ * - {@link getChildren}
+ *
+ * NOTE: The size of {@link Renderable} objects is not controlled by this API.
+ * Clients of this API are responsible for sizing.
+ */
+class Renderable {
     /**
      * @param {Object} config - Contains all the details the Renderable needs to
      *        know to calculate origins for itself and its children.
+     * @param {float} config.scale - Scale of this renderable object.
      * @param {Renderable} parent - The parent Renderable object (optional).
      * @param {number} scale - Default 1.0, used for UI clients to scale the
      *        drawings.
@@ -96,11 +98,15 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
      * @param {number} offset.y - Y coordinate
      * @param {number} offset.z - Z coordinate
      */
-    constructor(config, parent = undefined, scale = 1.0, offset = { x: 0, y: 0, z: 0 }) {
+    constructor(config, parent = undefined, offset = { x: 0, y: 0, z: 0 }) {
         this._config = config;
         this._parent = parent;
-        this._scale = scale;
         this._offset = offset;
+        if (config.hasOwnProperty("scale")) {
+            this._scale = config.scale;
+        } else {
+            this._scale = DEFAULT_SCALE;
+        }
         if (config.hasOwnProperty("origin")) {
             this._origin = config.origin;
         } else {
@@ -116,7 +122,14 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
     }
 
     getDimensions() {
-        return this._config.dimensions;
+        let dimensions = this._config.dimensions;
+        let scale = this.getScale();
+        let dimensionsOut = {
+            x: dimensions.x * scale,
+            y: dimensions.y * scale,
+            z: dimensions.z * scale
+        };
+        return dimensionsOut;
     }
 
     /**
@@ -128,7 +141,14 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
      * @property {number} z z coordinate
      */
     getOrigin() {
-        return this._origin;
+        let origin = this._origin;
+        let scale = this.getScale();
+        let originOut = {
+            x: origin.x * scale,
+            y: origin.y * scale,
+            z: origin.z * scale
+            //console.log(originOut)
+        };return originOut;
     }
 
     /**
@@ -138,6 +158,11 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
      */
     setScale(scale = 1.0) {
         this._scale = scale;
+        if (this.getChildren().length) {
+            this.getChildren().forEach(child => {
+                child.setScale(scale);
+            });
+        }
     }
 
     /**
@@ -183,7 +208,7 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
     }
 
     /**
-     * How subclasses provide access to their children.
+     * How subclasses provide access to their {@link Renderable} children.
      *
      * @abstract
      * @return {Renderable[]} children
@@ -302,14 +327,20 @@ const NeuronState = __webpack_require__(1).NeuronState;
  * @property {number} z z coordinate
  */
 /** @ignore */
-function getXyzFromIndex(idx, rx, ry, rz) {
-    var result = {};
-    var a = rz * ry;
-    result.z = Math.floor(idx / a);
-    var b = idx - a * result.z;
-    result.x = Math.floor(b / rz);
-    result.y = b % ry;
-    return result;
+function getXyzFromIndex(idx, xsize, ysize) {
+    var zcapacity = xsize * ysize;
+    var x = 0,
+        y = 0,
+        z = 0;
+    if (idx >= zcapacity) {
+        z = Math.floor(idx / zcapacity);
+    }
+    var idx2d = idx - zcapacity * z;
+    if (idx2d > ysize - 1) {
+        x = Math.floor(idx2d / ysize);
+    }
+    var y = idx2d - ysize * x;
+    return { x: x, y: y, z: z };
 }
 
 /**
@@ -369,18 +400,22 @@ class Layer extends Renderable {
         return this.getNeurons()[index];
     }
 
-    /**
-     * Get {@link Neuron} by 3D coordinate.
-     * @param {number} x - x
-     * @param {number} y - y
-     * @param {number} z - z
-     * @returns {Neuron} the neuron at specified index
-     */
-    getNeuronByXyz(x, y, z) {
-        var dims = this.getDimensions();
-        let globalIndex = z * dims.x * dims.y + x * dims.y + y;
-        return this.getNeuronByIndex(globalIndex);
-    }
+    ///**
+    // * Get {@link Neuron} by 3D coordinate.
+    // * @param {number} x - x
+    // * @param {number} y - y
+    // * @param {number} z - z
+    // * @returns {Neuron} the neuron at specified index
+    // */
+    //getNeuronByXyz(x, y, z) {
+    //    // We use the original dimensions for the lookup, not the one modified
+    //    // by scale.
+    //    var dims = this._config.dimensions
+    //    let globalIndex = z * dims.x * dims.y
+    //                    + x * dims.y
+    //                    + y
+    //    return this.getNeuronByIndex(globalIndex)
+    //}
 
     /**
      * @override
@@ -401,14 +436,20 @@ class Layer extends Renderable {
     }
 
     /*
-     * Builds out the layer from scratch.
+     * Builds out the layer from scratch using the config object.
      */
     _buildLayer() {
         this._neurons = [];
-        times(this._config.neuronCount)(i => this._neurons.push(new Neuron({
-            state: NeuronState.inactive,
-            origin: getXyzFromIndex(i, this._config.dimensions.x, this._config.dimensions.y, this._config.dimensions.z)
-        }, this)));
+        let count = this._config.neuronCount;
+        let scale = this.getScale();
+        for (let i = 0; i < count; i++) {
+            this._neurons.push(new Neuron({
+                name: `Neuron ${i}`,
+                state: NeuronState.inactive,
+                origin: getXyzFromIndex(i, this._config.dimensions.x, this._config.dimensions.y),
+                scale: scale
+            }, this));
+        }
         if (this._config.miniColumns) {
             // TODO: implement minicolumns.
         }
@@ -461,8 +502,10 @@ class Neuron extends Renderable {
      * @override
      */
     toString() {
+        let n = this.getName();
         let o = this.getOrigin();
-        return `${this.getName()} at [${o.x}, ${o.y}, ${o.z}]`;
+        let s = this.getScale();
+        return `${n} at [${o.x}, ${o.y}, ${o.z}] (scaled by ${s})`;
     }
 
     set state(state) {

@@ -25,14 +25,18 @@ const NeuronState = require("./enums").NeuronState
  * @property {number} z z coordinate
  */
  /** @ignore */
-function getXyzFromIndex(idx, rx, ry, rz) {
-    var result = {}
-    var a = (rz * ry)
-    result.z = Math.floor(idx / a)
-    var b = idx - a * result.z
-    result.x = Math.floor(b / rz)
-    result.y = b % ry
-    return result
+function getXyzFromIndex(idx, xsize, ysize) {
+    var zcapacity = xsize * ysize;
+    var x = 0, y = 0, z = 0;
+    if (idx >= zcapacity) {
+        z = Math.floor(idx / zcapacity);
+    }
+    var idx2d = idx - (zcapacity * z);
+    if (idx2d > (ysize-1)) {
+        x = Math.floor(idx2d / ysize);
+    }
+    var y = idx2d - (ysize * x);
+    return {x: x, y: y, z: z};
 }
 
 /**
@@ -93,21 +97,6 @@ class Layer extends Renderable {
     }
 
     /**
-     * Get {@link Neuron} by 3D coordinate.
-     * @param {number} x - x
-     * @param {number} y - y
-     * @param {number} z - z
-     * @returns {Neuron} the neuron at specified index
-     */
-    getNeuronByXyz(x, y, z) {
-        var dims = this.getDimensions()
-        let globalIndex = z * dims.x * dims.y
-                        + x * dims.y
-                        + y
-        return this.getNeuronByIndex(globalIndex)
-    }
-
-    /**
      * @override
      */
     toString(verbose = false) {
@@ -128,21 +117,23 @@ class Layer extends Renderable {
     }
 
     /*
-     * Builds out the layer from scratch.
+     * Builds out the layer from scratch using the config object.
      */
     _buildLayer() {
         this._neurons = []
-        times(this._config.neuronCount) (i =>
+        let count = this._config.neuronCount
+        let scale = this.getScale()
+        for (let i = 0; i < count; i++) {
             this._neurons.push(new Neuron({
+                name: `Neuron ${i}`,
                 state: NeuronState.inactive,
-                origin: getXyzFromIndex(
-                    i,
+                origin: getXyzFromIndex(i,
                     this._config.dimensions.x,
-                    this._config.dimensions.y,
-                    this._config.dimensions.z,
-                )
+                    this._config.dimensions.y
+                ),
+                scale: scale
             }, this))
-        )
+        }
         if (this._config.miniColumns) {
             // TODO: implement minicolumns.
         }
@@ -195,8 +186,10 @@ class Neuron extends Renderable {
      * @override
      */
     toString() {
+        let n = this.getName()
         let o = this.getOrigin()
-        return `${this.getName()} at [${o.x}, ${o.y}, ${o.z}]`
+        let s = this.getScale()
+        return `${n} at [${o.x}, ${o.y}, ${o.z}] (scaled by ${s})`
     }
 
     set state (state)  { this._state = state }

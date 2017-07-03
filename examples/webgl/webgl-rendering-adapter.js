@@ -10,25 +10,31 @@ function HtmHighbrowLayer(layer) {
 
 HtmHighbrowLayer.prototype.getX = function() {
     return this.dimensions.x
-};
+}
 
 HtmHighbrowLayer.prototype.getY = function() {
     return this.dimensions.y
-};
+}
 
 HtmHighbrowLayer.prototype.getZ = function() {
     return this.dimensions.z
-};
+}
+
+HtmHighbrowLayer.prototype.size = function() {
+    return this.layer.getNeurons().length
+}
+
+HtmHighbrowLayer.prototype.getCellPosition = function(index) {
+    return this.layer.getNeuronByIndex(index).getOrigin()
+}
 
 /**
- * Gets the value of the cell given the coordinates.
- * @param x (int) x coordinate
- * @param y (int) y coordinate
- * @param z (int) z coordinate
+ * Gets the value of the cell given the global index.
+ * @param index (int) global cell position.
  * @returns {*} whatever value was in the cell
  */
-HtmHighbrowLayer.prototype.getCellValue = function(x, y, z) {
-    let neuronState = this.layer.getNeuronByXyz(x, y, z).state
+HtmHighbrowLayer.prototype.getCellValue = function(index) {
+    let neuronState = this.layer.getNeuronByIndex(index).state
     let out = { state: neuronState }
     if (neuronState == "inactive") {
         out.color = new THREE.Color('#FFFEEE')

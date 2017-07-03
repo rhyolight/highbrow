@@ -18,11 +18,11 @@ class Neuron extends Renderable {
     }
 
     activate() {
-        this._state = NeuronState.active
+        this.setState(NeuronState.active)
     }
 
     deactivate() {
-        this._state = NeuronState.inactive
+        this.setState(NeuronState.inactive)
     }
 
     /**

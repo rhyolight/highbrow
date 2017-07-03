@@ -1,13 +1,16 @@
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
 const Renderable = require("./renderable")
 /** @ignore */
-const times = require("./utils").times
+const Neuron = require("./neuron")
 /** @ignore */
 const NeuronState = require("./enums").NeuronState
+
+/** @ignore */
+const times = require("./utils").times
 
 /*
  * Active cell indices returned from HTM systems generally are ordered with
@@ -19,20 +22,24 @@ const NeuronState = require("./enums").NeuronState
  * @param {integer} rx - range of the x dimension
  * @param {integer} ry - range of the y dimension
  * @param {integer} rz - range of the z dimension
- * @return {Object} point with 3D coordinates
- * @property {number} x x coordinate
- * @property {number} y y coordinate
- * @property {number} z z coordinate
+ * @return {Object} The position (not coordinate)
+ * @property {integer} x x position
+ * @property {integer} y y position
+ * @property {integer} z z position
  */
  /** @ignore */
-function getXyzFromIndex(idx, rx, ry, rz) {
-    var result = {}
-    var a = (rz * ry)
-    result.z = Math.floor(idx / a)
-    var b = idx - a * result.z
-    result.x = Math.floor(b / rz)
-    result.y = b % ry
-    return result
+function getXyzPositionFromIndex(idx, xsize, ysize) {
+    var zcapacity = xsize * ysize;
+    var x = 0, y = 0, z = 0;
+    if (idx >= zcapacity) {
+        z = Math.floor(idx / zcapacity);
+    }
+    var idx2d = idx - (zcapacity * z);
+    if (idx2d > (ysize-1)) {
+        x = Math.floor(idx2d / ysize);
+    }
+    var y = idx2d - (ysize * x);
+    return {x: x, y: y, z: z};
 }
 
 /**
@@ -93,21 +100,6 @@ class Layer extends Renderable {
     }
 
     /**
-     * Get {@link Neuron} by 3D coordinate.
-     * @param {number} x - x
-     * @param {number} y - y
-     * @param {number} z - z
-     * @returns {Neuron} the neuron at specified index
-     */
-    getNeuronByXyz(x, y, z) {
-        var dims = this.getDimensions()
-        let globalIndex = z * dims.x * dims.y
-                        + x * dims.y
-                        + y
-        return this.getNeuronByIndex(globalIndex)
-    }
-
-    /**
      * @override
      */
     toString(verbose = false) {
@@ -127,22 +119,27 @@ class Layer extends Renderable {
         return out
     }
 
-    /*
-     * Builds out the layer from scratch.
+    /**
+     * Builds out the layer from scratch using the config object. Creates an
+     * array of {@link Neuron}s that will be used for the lifespan of the Layer.
      */
     _buildLayer() {
         this._neurons = []
-        times(this._config.neuronCount) (i =>
-            this._neurons.push(new Neuron({
+        let count = this._config.neuronCount
+        let scale = this.getScale()
+        for (let i = 0; i < count; i++) {
+            let neuron = new Neuron({
+                name: `Neuron ${i}`,
                 state: NeuronState.inactive,
-                origin: getXyzFromIndex(
-                    i,
+                index: i,
+                position: getXyzPositionFromIndex(i,
                     this._config.dimensions.x,
-                    this._config.dimensions.y,
-                    this._config.dimensions.z,
-                )
-            }, this))
-        )
+                    this._config.dimensions.y
+                ),
+                scale: scale
+            }, this)
+            this._neurons.push(neuron)
+        }
         if (this._config.miniColumns) {
             // TODO: implement minicolumns.
         }
@@ -157,55 +154,6 @@ class MiniColumn extends Renderable {
     constructor(config, parent) {
         super(config, parent)
     }
-}
-
-/**
- * Represents a pyramidal neuron. The atomic unit of HTM computation.
- */
-class Neuron extends Renderable {
-    constructor(config, parent) {
-        super(config, parent)
-        this._state = NeuronState.inactive
-    }
-
-    activate() {
-        this._state = NeuronState.active
-    }
-
-    deactivate() {
-        this._state = NeuronState.inactive
-    }
-
-    /**
-     * @override NOOP
-     * @returns [] empty list
-     */
-    getChildren() {
-        return []
-    }
-
-    /**
-     * @override
-     */
-    getName() {
-        return `${this.index} (${this.state})`
-    }
-
-    /**
-     * @override
-     */
-    toString() {
-        let o = this.getOrigin()
-        return `${this.getName()} at [${o.x}, ${o.y}, ${o.z}]`
-    }
-
-    set state (state)  { this._state = state }
-
-    get state () { return this._state }
-
-    // This index only changes if the config changes (unlikely).
-    get index () { return this.getConfig()["index"] }
-
 }
 
 module.exports = Layer

@@ -11,9 +11,8 @@
     <body>
 
         <script src="https://code.jquery.com/jquery-3.1.0.slim.min.js"></script>
-        <script src="../../bin/cell-viz-1.0.1.bundle.js"></script>
+        <script src="../../bin/cell-viz-1.1.0.bundle.js"></script>
         <script src="../../bin/highbrow-0.0.1.bundle.js"></script>
-        <script src="webgl-rendering-adapter.js"></script>
 
         <script>
 
@@ -30,14 +29,16 @@
                                 name: "layer 1",
                                 miniColumns: false,
                                 neuronCount: dimensions.x * dimensions.y * dimensions.z,
-                                dimensions: dimensions
+                                dimensions: dimensions,
+                                scale: 1,
                             }
                         ]
                     }]
                 }
                 var network = Highbrow.createHtmNetwork(simple)
                 var layer = network.getCorticalColumns()[0].getLayers()[0]
-                var cellviz = new SingleLayerVisualization(new HtmHighbrowLayer(layer));
+
+                var cellviz = new HighbrowLayerVisualization(layer);
 
                 animateCells(layer);
 

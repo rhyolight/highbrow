@@ -1,9 +1,11 @@
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
 const DEFAULT_ORIGIN = {x: 0, y: 0, z: 0}
+/** @ignore */
+const DEFAULT_SCALE = 1.0
 
 /**
  * Abstract base class for renderable objects. All renderable objects must
@@ -17,6 +19,7 @@ class Renderable {
     /**
      * @param {Object} config - Contains all the details the Renderable needs to
      *        know to calculate origins for itself and its children.
+     * @param {float} config.scale - Scale of this renderable object.
      * @param {Renderable} parent - The parent Renderable object (optional).
      * @param {number} scale - Default 1.0, used for UI clients to scale the
      *        drawings.
@@ -26,12 +29,16 @@ class Renderable {
      * @param {number} offset.y - Y coordinate
      * @param {number} offset.z - Z coordinate
      */
-    constructor(config, parent = undefined, scale = 1.0,
+    constructor(config, parent = undefined,
                 offset = {x:0, y:0, z:0}) {
         this._config = config
         this._parent = parent
-        this._scale = scale
         this._offset = offset
+        if (config.hasOwnProperty("scale")) {
+            this._scale = config.scale
+        } else {
+            this._scale = DEFAULT_SCALE
+        }
         if (config.hasOwnProperty("origin")) {
             this._origin = config.origin
         } else {
@@ -47,7 +54,14 @@ class Renderable {
     }
 
     getDimensions() {
-        return this._config.dimensions
+        let dimensions = this._config.dimensions
+        let scale = this.getScale()
+        let dimensionsOut = {
+            x: dimensions.x * scale,
+            y: dimensions.y * scale,
+            z: dimensions.z * scale,
+        }
+        return dimensionsOut
     }
 
     /**
@@ -59,7 +73,15 @@ class Renderable {
      * @property {number} z z coordinate
      */
     getOrigin() {
-        return this._origin
+        let origin = this._origin
+        let scale = this.getScale()
+        let originOut = {
+            x: origin.x * scale,
+            y: origin.y * scale,
+            z: origin.z * scale,
+        }
+        //console.log(originOut)
+        return originOut
     }
 
     /**
@@ -69,6 +91,9 @@ class Renderable {
      */
     setScale(scale = 1.0) {
         this._scale = scale
+        if (this.getChildren().length) {
+            this.getChildren().forEach(child => { child.setScale(scale)})
+        }
     }
 
     /**

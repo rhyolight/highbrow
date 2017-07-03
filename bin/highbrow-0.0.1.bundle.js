@@ -69,24 +69,26 @@
 
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
 const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
+    /** @ignore */
+};const DEFAULT_SCALE = 1.0;
 
-    /**
-     * Abstract base class for renderable objects. All renderable objects must
-     * provide the following function implementations:
-     * - {@link getOrigin}
-     * - {@link getChildren}
-     *
-     * NOTE: The size of {@link Renderable} objects is not controlled by this API.
-     * Clients of this API are responsible for sizing.
-     */
-};class Renderable {
+/**
+ * Abstract base class for renderable objects. All renderable objects must
+ * provide the following function implementations:
+ * - {@link getChildren}
+ *
+ * NOTE: The size of {@link Renderable} objects is not controlled by this API.
+ * Clients of this API are responsible for sizing.
+ */
+class Renderable {
     /**
      * @param {Object} config - Contains all the details the Renderable needs to
      *        know to calculate origins for itself and its children.
+     * @param {float} config.scale - Scale of this renderable object.
      * @param {Renderable} parent - The parent Renderable object (optional).
      * @param {number} scale - Default 1.0, used for UI clients to scale the
      *        drawings.
@@ -96,11 +98,15 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
      * @param {number} offset.y - Y coordinate
      * @param {number} offset.z - Z coordinate
      */
-    constructor(config, parent = undefined, scale = 1.0, offset = { x: 0, y: 0, z: 0 }) {
+    constructor(config, parent = undefined, offset = { x: 0, y: 0, z: 0 }) {
         this._config = config;
         this._parent = parent;
-        this._scale = scale;
         this._offset = offset;
+        if (config.hasOwnProperty("scale")) {
+            this._scale = config.scale;
+        } else {
+            this._scale = DEFAULT_SCALE;
+        }
         if (config.hasOwnProperty("origin")) {
             this._origin = config.origin;
         } else {
@@ -116,7 +122,14 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
     }
 
     getDimensions() {
-        return this._config.dimensions;
+        let dimensions = this._config.dimensions;
+        let scale = this.getScale();
+        let dimensionsOut = {
+            x: dimensions.x * scale,
+            y: dimensions.y * scale,
+            z: dimensions.z * scale
+        };
+        return dimensionsOut;
     }
 
     /**
@@ -128,7 +141,14 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
      * @property {number} z z coordinate
      */
     getOrigin() {
-        return this._origin;
+        let origin = this._origin;
+        let scale = this.getScale();
+        let originOut = {
+            x: origin.x * scale,
+            y: origin.y * scale,
+            z: origin.z * scale
+            //console.log(originOut)
+        };return originOut;
     }
 
     /**
@@ -138,6 +158,11 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
      */
     setScale(scale = 1.0) {
         this._scale = scale;
+        if (this.getChildren().length) {
+            this.getChildren().forEach(child => {
+                child.setScale(scale);
+            });
+        }
     }
 
     /**
@@ -183,7 +208,7 @@ const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
     }
 
     /**
-     * How subclasses provide access to their children.
+     * How subclasses provide access to their {@link Renderable} children.
      *
      * @abstract
      * @return {Renderable[]} children
@@ -217,7 +242,7 @@ module.exports = Renderable;
 
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /**
  * All the states a neuron might be in.
@@ -255,7 +280,7 @@ module.exports = { NeuronState, MiniColumnState, HtmLinkType };
 
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /**
  * @ignore Just a counter loop, including iterator.
@@ -277,14 +302,17 @@ module.exports = { times };
 
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
 const Renderable = __webpack_require__(0);
 /** @ignore */
-const times = __webpack_require__(2).times;
+const Neuron = __webpack_require__(8);
 /** @ignore */
 const NeuronState = __webpack_require__(1).NeuronState;
+
+/** @ignore */
+const times = __webpack_require__(2).times;
 
 /*
  * Active cell indices returned from HTM systems generally are ordered with
@@ -296,20 +324,26 @@ const NeuronState = __webpack_require__(1).NeuronState;
  * @param {integer} rx - range of the x dimension
  * @param {integer} ry - range of the y dimension
  * @param {integer} rz - range of the z dimension
- * @return {Object} point with 3D coordinates
- * @property {number} x x coordinate
- * @property {number} y y coordinate
- * @property {number} z z coordinate
+ * @return {Object} The position (not coordinate)
+ * @property {integer} x x position
+ * @property {integer} y y position
+ * @property {integer} z z position
  */
 /** @ignore */
-function getXyzFromIndex(idx, rx, ry, rz) {
-    var result = {};
-    var a = rz * ry;
-    result.z = Math.floor(idx / a);
-    var b = idx - a * result.z;
-    result.x = Math.floor(b / rz);
-    result.y = b % ry;
-    return result;
+function getXyzPositionFromIndex(idx, xsize, ysize) {
+    var zcapacity = xsize * ysize;
+    var x = 0,
+        y = 0,
+        z = 0;
+    if (idx >= zcapacity) {
+        z = Math.floor(idx / zcapacity);
+    }
+    var idx2d = idx - zcapacity * z;
+    if (idx2d > ysize - 1) {
+        x = Math.floor(idx2d / ysize);
+    }
+    var y = idx2d - ysize * x;
+    return { x: x, y: y, z: z };
 }
 
 /**
@@ -370,19 +404,6 @@ class Layer extends Renderable {
     }
 
     /**
-     * Get {@link Neuron} by 3D coordinate.
-     * @param {number} x - x
-     * @param {number} y - y
-     * @param {number} z - z
-     * @returns {Neuron} the neuron at specified index
-     */
-    getNeuronByXyz(x, y, z) {
-        var dims = this.getDimensions();
-        let globalIndex = z * dims.x * dims.y + x * dims.y + y;
-        return this.getNeuronByIndex(globalIndex);
-    }
-
-    /**
      * @override
      */
     toString(verbose = false) {
@@ -400,15 +421,25 @@ class Layer extends Renderable {
         return out;
     }
 
-    /*
-     * Builds out the layer from scratch.
+    /**
+     * Builds out the layer from scratch using the config object. Creates an
+     * array of {@link Neuron}s that will be used for the lifespan of the Layer.
      */
     _buildLayer() {
         this._neurons = [];
-        times(this._config.neuronCount)(i => this._neurons.push(new Neuron({
-            state: NeuronState.inactive,
-            origin: getXyzFromIndex(i, this._config.dimensions.x, this._config.dimensions.y, this._config.dimensions.z)
-        }, this)));
+        let count = this._config.neuronCount;
+        let scale = this.getScale();
+        for (let i = 0; i < count; i++) {
+            let neuron = new Neuron({
+                name: `Neuron ${i}`,
+                state: NeuronState.inactive,
+                index: i,
+                position: getXyzPositionFromIndex(i, this._config.dimensions.x, this._config.dimensions.y),
+                scale: scale
+            }, this);
+            console.log(neuron.toString());
+            this._neurons.push(neuron);
+        }
         if (this._config.miniColumns) {
             // TODO: implement minicolumns.
         }
@@ -425,61 +456,6 @@ class MiniColumn extends Renderable {
     }
 }
 
-/**
- * Represents a pyramidal neuron. The atomic unit of HTM computation.
- */
-class Neuron extends Renderable {
-    constructor(config, parent) {
-        super(config, parent);
-        this._state = NeuronState.inactive;
-    }
-
-    activate() {
-        this._state = NeuronState.active;
-    }
-
-    deactivate() {
-        this._state = NeuronState.inactive;
-    }
-
-    /**
-     * @override NOOP
-     * @returns [] empty list
-     */
-    getChildren() {
-        return [];
-    }
-
-    /**
-     * @override
-     */
-    getName() {
-        return `${this.index} (${this.state})`;
-    }
-
-    /**
-     * @override
-     */
-    toString() {
-        let o = this.getOrigin();
-        return `${this.getName()} at [${o.x}, ${o.y}, ${o.z}]`;
-    }
-
-    set state(state) {
-        this._state = state;
-    }
-
-    get state() {
-        return this._state;
-    }
-
-    // This index only changes if the config changes (unlikely).
-    get index() {
-        return this.getConfig()["index"];
-    }
-
-}
-
 module.exports = Layer;
 
 /***/ }),
@@ -488,7 +464,7 @@ module.exports = Layer;
 
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
 const Renderable = __webpack_require__(0);
@@ -544,7 +520,7 @@ module.exports = HtmNetworkLink;
 
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
 const Renderable = __webpack_require__(0);
@@ -618,7 +594,7 @@ module.exports = CorticalColumn;
 
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
 const Renderable = __webpack_require__(0);
@@ -694,7 +670,7 @@ __webpack_require__(3);
 __webpack_require__(4);
 __webpack_require__(5);
 __webpack_require__(6);
-module.exports = __webpack_require__(8);
+module.exports = __webpack_require__(9);
 
 
 /***/ }),
@@ -703,7 +679,101 @@ module.exports = __webpack_require__(8);
 
 // Highbrow
 // MIT License (see LICENSE)
-// Copyright © 2005—2017 Numenta <http://numenta.com>
+// Copyright © 2017 Numenta <http://numenta.com>
+
+/** @ignore */
+const Renderable = __webpack_require__(0);
+/** @ignore */
+const NeuronState = __webpack_require__(1).NeuronState;
+
+/**
+ * Represents a pyramidal neuron. The atomic unit of HTM computation.
+ */
+class Neuron extends Renderable {
+    constructor(config, parent) {
+        super(config, parent);
+        this._state = NeuronState.inactive;
+        this._position = config.position;
+    }
+
+    activate() {
+        this._state = NeuronState.active;
+    }
+
+    deactivate() {
+        this._state = NeuronState.inactive;
+    }
+
+    /**
+     * Neurons are not created with an origin initially like other
+     * {@link Renderable} objects, because they are laid out in a grid
+     * within the Layer space. But we know the position, so we can calculate the
+     * origin using the scale.
+     */
+    getOrigin() {
+        let pos = this._position;
+        let scale = this.getScale();
+        return {
+            x: pos.x * scale,
+            y: pos.y * scale,
+            z: pos.z * scale
+        };
+    }
+
+    /**
+     * @override NOOP
+     * @returns [] empty list
+     */
+    getChildren() {
+        return [];
+    }
+
+    /**
+     * @override
+     */
+    getName() {
+        return `${this.index} (${this.state})`;
+    }
+
+    /**
+     * @override
+     */
+    toString() {
+        let n = this.getName();
+        let p = this.position;
+        let o = this.getOrigin();
+        let s = this.getScale();
+        return `${n} at position [${p.x}, ${p.y}, ${p.z}], coordinate [${o.x}, ${o.y}, ${o.z}] (scaled by ${s})`;
+    }
+
+    set state(state) {
+        this._state = state;
+    }
+
+    get state() {
+        return this._state;
+    }
+
+    get position() {
+        return this._position;
+    }
+
+    // This index only changes if the config changes (unlikely).
+    get index() {
+        return this.getConfig()["index"];
+    }
+
+}
+
+module.exports = Neuron;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Highbrow
+// MIT License (see LICENSE)
+// Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
 const NeuronState = __webpack_require__(1).NeuronState;

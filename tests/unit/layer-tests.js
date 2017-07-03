@@ -31,7 +31,7 @@ describe("Layer Unit Tests", () => {
             let count = 0
             for (var neuron of layer.getNeurons()) {
                 let expectedState = count % 6 == 0 ? NeuronState.active : NeuronState.inactive
-                expect(neuron.state).to.equal(expectedState)
+                expect(neuron.getState()).to.equal(expectedState)
                 count++
             }
         })
@@ -47,7 +47,7 @@ describe("Layer Unit Tests", () => {
             let count = 0
             for (let neuron of layer.getNeurons()) {
                 let expectedState = count++ % 7 == 0 ? NeuronState.active : NeuronState.inactive
-                expect(neuron.state).to.equal(expectedState)
+                expect(neuron.getState()).to.equal(expectedState)
             }
         })
 

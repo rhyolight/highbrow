@@ -367,9 +367,9 @@ class Layer extends Renderable {
         let index = 0;
         for (let neuron of this.getNeurons()) {
             if (activeCellIndexes.includes(index)) {
-                neuron.state = NeuronState.active;
+                neuron.setState(NeuronState.active);
             } else {
-                neuron.state = NeuronState.inactive;
+                neuron.setState(NeuronState.inactive);
             }
             index++;
         }
@@ -437,7 +437,6 @@ class Layer extends Renderable {
                 position: getXyzPositionFromIndex(i, this._config.dimensions.x, this._config.dimensions.y),
                 scale: scale
             }, this);
-            console.log(neuron.toString());
             this._neurons.push(neuron);
         }
         if (this._config.miniColumns) {
@@ -697,11 +696,11 @@ class Neuron extends Renderable {
     }
 
     activate() {
-        this._state = NeuronState.active;
+        this.setState(NeuronState.active);
     }
 
     deactivate() {
-        this._state = NeuronState.inactive;
+        this.setState(NeuronState.inactive);
     }
 
     /**
@@ -746,20 +745,20 @@ class Neuron extends Renderable {
         return `${n} at position [${p.x}, ${p.y}, ${p.z}], coordinate [${o.x}, ${o.y}, ${o.z}] (scaled by ${s})`;
     }
 
-    set state(state) {
+    setState(state) {
         this._state = state;
     }
 
-    get state() {
+    getState() {
         return this._state;
     }
 
-    get position() {
+    getPosition() {
         return this._position;
     }
 
     // This index only changes if the config changes (unlikely).
-    get index() {
+    getIndex() {
         return this.getConfig()["index"];
     }
 

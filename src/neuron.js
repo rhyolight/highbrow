@@ -18,11 +18,11 @@ class Neuron extends Renderable {
     }
 
     activate() {
-        this._state = NeuronState.active
+        this.setState(NeuronState.active)
     }
 
     deactivate() {
-        this._state = NeuronState.inactive
+        this.setState(NeuronState.inactive)
     }
 
     /**
@@ -67,14 +67,22 @@ class Neuron extends Renderable {
         return `${n} at position [${p.x}, ${p.y}, ${p.z}], coordinate [${o.x}, ${o.y}, ${o.z}] (scaled by ${s})`
     }
 
-    set state (state)  { this._state = state }
+    setState (state)  {
+        this._state = state
+    }
 
-    get state () { return this._state }
+    getState () {
+        return this._state
+    }
 
-    get position() { return this._position }
+    getPosition() {
+        return this._position
+    }
 
     // This index only changes if the config changes (unlikely).
-    get index () { return this.getConfig()["index"] }
+    getIndex () {
+        return this.getConfig()["index"]
+    }
 
 }
 

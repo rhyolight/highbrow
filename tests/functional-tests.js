@@ -114,7 +114,7 @@ describe("simple network data update", () => {
             for (const [index, neuron] of layer.getNeurons().entries()) {
                 let expectedState = activeCells.includes(index) ?
                                     NeuronState.active : NeuronState.inactive
-                expect(neuron.state).to.equal(expectedState)
+                expect(neuron.getState()).to.equal(expectedState)
             }
         })
     })

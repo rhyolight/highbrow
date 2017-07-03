@@ -63,9 +63,9 @@ class Layer extends Renderable {
         let index = 0
         for (let neuron of this.getNeurons()) {
             if (activeCellIndexes.includes(index)) {
-                neuron.state = NeuronState.active
+                neuron.setState(NeuronState.active)
             } else {
-                neuron.state = NeuronState.inactive
+                neuron.setState(NeuronState.inactive)
             }
             index++
         }

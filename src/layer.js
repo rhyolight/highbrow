@@ -126,7 +126,6 @@ class Layer extends Renderable {
     _buildLayer() {
         this._neurons = []
         let count = this._config.neuronCount
-        let scale = this.getScale()
         for (let i = 0; i < count; i++) {
             let neuron = new Neuron({
                 name: `Neuron ${i}`,
@@ -136,7 +135,8 @@ class Layer extends Renderable {
                     this._config.dimensions.x,
                     this._config.dimensions.y
                 ),
-                scale: scale
+                scale: this.getScale(),
+                offset: this.getOffset()
             }, this)
             this._neurons.push(neuron)
         }

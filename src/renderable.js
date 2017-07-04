@@ -3,18 +3,11 @@
 // Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
-const DEFAULT_ORIGIN = {x:0, y:0, z:0}
-/** @ignore */
-const DEFAULT_SCALE = 1.0
-/** @ignore */
-const DEFAULT_OFFSET = {x:0, y:0, z:0}
-
-function getConfigValueOrDefault(name, config, def) {
-    let out = def
-    if (config.hasOwnProperty(name)) {
-        out = config[name]
-    }
-    return out
+const CONFIG_DEFAULTS = {
+    origin: {x:0, y:0, z:0},
+    offset: {x:0, y:0, z:0},
+    scale: 1.0,
+    spacing: 1.0,
 }
 
 /**
@@ -42,9 +35,18 @@ class Renderable {
     constructor(config, parent = undefined) {
         this._config = config
         this._parent = parent
-        this._scale = getConfigValueOrDefault("scale", config, DEFAULT_SCALE)
-        this._offset = getConfigValueOrDefault("offset", config, DEFAULT_OFFSET)
-        this._origin = getConfigValueOrDefault("origin", config, DEFAULT_ORIGIN)
+        this._scale = this._getConfigValueOrDefault("scale")
+        this._offset = this._getConfigValueOrDefault("offset")
+        this._origin = this._getConfigValueOrDefault("origin")
+        this._spacing = this._getConfigValueOrDefault("spacing")
+    }
+
+    _getConfigValueOrDefault(name) {
+        let out = CONFIG_DEFAULTS[name]
+        if (this._config.hasOwnProperty(name)) {
+            out = this._config[name]
+        }
+        return out
     }
 
     /**
@@ -126,6 +128,10 @@ class Renderable {
      */
     getOffset() {
         return this._offset
+    }
+
+    getSpacing() {
+        return this._spacing
     }
 
     /**

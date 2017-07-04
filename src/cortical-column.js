@@ -13,8 +13,24 @@ const Layer = require("./layer")
 class CorticalColumn extends Renderable {
     constructor(config, parent) {
         super(config, parent)
-        this._layers = this._config.layers.map((config) => {
-            return new Layer(config, this)
+        this._layers = this._config.layers.map((layerConfig, index) => {
+            // Attach the same origin as the parent, but a clone.
+            layerConfig.origin = Object.assign({}, this.getOrigin())
+            // Layers need spacing in between them, which will affect their
+            // origin points in the Y direction. If there are multiple layers,
+            // their Y origins get updated here using the column spacing and the
+            // sizes of lower layers.
+
+            // FIXME: I think there is abug here, but my tests don't uncover it.
+            //        It's because only the layer immediately under the current
+            //        layer has its Y dimension counted, lower layers may have
+            //        other Y dimensions.
+            if (index > 0) {
+                layerConfig.origin.y =
+                    this._config.layers[index - 1].dimensions.y * index
+                    + this.getSpacing() * index
+            }
+            return new Layer(layerConfig, this)
         })
     }
 

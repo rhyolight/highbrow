@@ -5,7 +5,6 @@ const testConfigs = require("../config")
 
 const HtmNetwork = require("../../src/htm-network")
 
-
 describe("HtmNetwork Unit Tests", () => {
 
     describe("when constructing a simple network", () => {

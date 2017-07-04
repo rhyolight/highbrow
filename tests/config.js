@@ -16,6 +16,62 @@ const simple = {
     }]
 }
 
+const oneColTwoLayers = {
+    name: "one column, two layers",
+    corticalColumns: [{
+        name: "column 1",
+        layers: [
+            {
+                name: "layer 1",
+                miniColumns: false,
+                neuronCount: 1000,
+                dimensions: {
+                    x: 10, y: 10, z: 10
+                }
+            },
+            {
+                name: "layer 2",
+                miniColumns: false,
+                neuronCount: 1000,
+                dimensions: {
+                    x: 10, y: 10, z: 10
+                }
+            }
+        ]
+    }]
+}
+const oneColThreeLayers = {
+    name: "one column, three layers",
+    corticalColumns: [{
+        name: "column 1",
+        layers: [
+            {
+                name: "layer 1",
+                miniColumns: false,
+                neuronCount: 1000,
+                dimensions: {
+                    x: 10, y: 4, z: 10
+                }
+            },
+            {
+                name: "layer 2",
+                miniColumns: false,
+                neuronCount: 1000,
+                dimensions: {
+                    x: 10, y: 5, z: 10
+                }
+            },
+            {
+                name: "layer 3",
+                miniColumns: false,
+                neuronCount: 1000,
+                dimensions: {
+                    x: 10, y: 6, z: 10
+                }
+            }
+        ]
+    }]
+}
 // Complex network with multiple columns and layers, includes mini-columns.
 const complex = {
     name: "simple network",
@@ -60,4 +116,4 @@ const complex = {
     }]
 }
 
-module.exports = {simple, complex}
+module.exports = {simple, oneColTwoLayers, oneColThreeLayers, complex}

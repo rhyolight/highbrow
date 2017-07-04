@@ -75,6 +75,16 @@
 const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
     /** @ignore */
 };const DEFAULT_SCALE = 1.0;
+/** @ignore */
+const DEFAULT_OFFSET = { x: 0, y: 0, z: 0 };
+
+function getConfigValueOrDefault(name, config, def) {
+    let out = def;
+    if (config.hasOwnProperty(name)) {
+        out = config[name];
+    }
+    return out;
+}
 
 /**
  * Abstract base class for renderable objects. All renderable objects must
@@ -98,20 +108,12 @@ class Renderable {
      * @param {number} offset.y - Y coordinate
      * @param {number} offset.z - Z coordinate
      */
-    constructor(config, parent = undefined, offset = { x: 0, y: 0, z: 0 }) {
+    constructor(config, parent = undefined) {
         this._config = config;
         this._parent = parent;
-        this._offset = offset;
-        if (config.hasOwnProperty("scale")) {
-            this._scale = config.scale;
-        } else {
-            this._scale = DEFAULT_SCALE;
-        }
-        if (config.hasOwnProperty("origin")) {
-            this._origin = config.origin;
-        } else {
-            this._origin = DEFAULT_ORIGIN;
-        }
+        this._scale = getConfigValueOrDefault("scale", config, DEFAULT_SCALE);
+        this._offset = getConfigValueOrDefault("offset", config, DEFAULT_OFFSET);
+        this._origin = getConfigValueOrDefault("origin", config, DEFAULT_ORIGIN);
     }
 
     /**
@@ -143,12 +145,13 @@ class Renderable {
     getOrigin() {
         let origin = this._origin;
         let scale = this.getScale();
+        let offset = this.getOffset();
         let originOut = {
-            x: origin.x * scale,
-            y: origin.y * scale,
-            z: origin.z * scale
-            //console.log(originOut)
-        };return originOut;
+            x: origin.x * scale + offset.x,
+            y: origin.y * scale + offset.y,
+            z: origin.z * scale + offset.z
+        };
+        return originOut;
     }
 
     /**
@@ -156,7 +159,7 @@ class Renderable {
      * children. Use {@link setOffset} with this function to reposition this
      * {@link Renderable}'s children.
      */
-    setScale(scale = 1.0) {
+    setScale(scale) {
         this._scale = scale;
         if (this.getChildren().length) {
             this.getChildren().forEach(child => {
@@ -428,14 +431,14 @@ class Layer extends Renderable {
     _buildLayer() {
         this._neurons = [];
         let count = this._config.neuronCount;
-        let scale = this.getScale();
         for (let i = 0; i < count; i++) {
             let neuron = new Neuron({
                 name: `Neuron ${i}`,
                 state: NeuronState.inactive,
                 index: i,
                 position: getXyzPositionFromIndex(i, this._config.dimensions.x, this._config.dimensions.y),
-                scale: scale
+                scale: this.getScale(),
+                offset: this.getOffset()
             }, this);
             this._neurons.push(neuron);
         }
@@ -712,10 +715,11 @@ class Neuron extends Renderable {
     getOrigin() {
         let pos = this._position;
         let scale = this.getScale();
+        let offset = this.getOffset();
         return {
-            x: pos.x * scale,
-            y: pos.y * scale,
-            z: pos.z * scale
+            x: pos.x * scale + offset.x,
+            y: pos.y * scale + offset.y,
+            z: pos.z * scale + offset.z
         };
     }
 

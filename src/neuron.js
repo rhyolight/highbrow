@@ -34,10 +34,11 @@ class Neuron extends Renderable {
     getOrigin() {
         let pos = this._position
         let scale = this.getScale()
+        let offset = this.getOffset()
         return {
-            x: pos.x * scale,
-            y: pos.y * scale,
-            z: pos.z * scale,
+            x: pos.x * scale + offset.x,
+            y: pos.y * scale + offset.y,
+            z: pos.z * scale + offset.z,
         }
     }
 

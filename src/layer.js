@@ -48,7 +48,15 @@ function getXyzPositionFromIndex(idx, xsize, ysize) {
 class Layer extends Renderable {
     constructor(config, parent) {
         super(config, parent)
+        if (config.dimensions == undefined) {
+            throw Error("Cannot create Layer without dimensions")
+        }
+        this._dimensions = config.dimensions
         this._buildLayer()
+    }
+
+    getDimensions() {
+        return this._dimensions
     }
 
     /**
@@ -114,7 +122,7 @@ class Layer extends Renderable {
                 }
             }
         } else {
-            out += ` contains ${this._neurons.length} neurons`
+            out += ` contains ${this._neurons.length} neurons scaled by ${this.getScale()}`
         }
         return out
     }
@@ -126,17 +134,26 @@ class Layer extends Renderable {
     _buildLayer() {
         this._neurons = []
         let count = this._config.neuronCount
+        let layerOrigin = this.getOrigin()
         for (let i = 0; i < count; i++) {
+            let position = getXyzPositionFromIndex(
+                i, this._dimensions.x, this._dimensions.y
+            )
+            // When creating children, we must apply the scale to the origin
+            // points to render them in the right perspective.
+            let scaledPosition = this._applyScale(position)
+            // Start from the layer origin and add the scaled position.
+            let origin = {
+                x: layerOrigin.x + scaledPosition.x,
+                y: layerOrigin.y + scaledPosition.y,
+                z: layerOrigin.z + scaledPosition.z,
+            }
             let neuron = new Neuron({
                 name: `Neuron ${i}`,
                 state: NeuronState.inactive,
                 index: i,
-                position: getXyzPositionFromIndex(i,
-                    this._config.dimensions.x,
-                    this._config.dimensions.y
-                ),
-                scale: this.getScale(),
-                offset: this.getOffset()
+                position: position,
+                origin: origin
             }, this)
             this._neurons.push(neuron)
         }

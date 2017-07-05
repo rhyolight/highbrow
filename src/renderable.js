@@ -4,8 +4,6 @@
 
 /** @ignore */
 const CONFIG_DEFAULTS = {
-    origin: {x:0, y:0, z:0},
-    offset: {x:0, y:0, z:0},
     scale: 1.0,
     spacing: 1.0,
 }
@@ -26,27 +24,36 @@ class Renderable {
      * @param {Renderable} parent - The parent Renderable object (optional).
      * @param {number} scale - Default 1.0, used for UI clients to scale the
      *        drawings.
-     * @param {Object} offset - Moves the object in 3D space, will affect all
-     *        point calculations. Can be used to adjust for `scale` changes.
-     * @param {number} offset.x - X coordinate
-     * @param {number} offset.y - Y coordinate
-     * @param {number} offset.z - Z coordinate
      */
     constructor(config, parent = undefined) {
         this._config = config
         this._parent = parent
         this._scale = this._getConfigValueOrDefault("scale")
-        this._offset = this._getConfigValueOrDefault("offset")
         this._origin = this._getConfigValueOrDefault("origin")
         this._spacing = this._getConfigValueOrDefault("spacing")
     }
 
+    // Utility for overridding default values and throwing error if no value
+    // exists.
     _getConfigValueOrDefault(name) {
         let out = CONFIG_DEFAULTS[name]
         if (this._config.hasOwnProperty(name)) {
             out = this._config[name]
         }
+        if (out == undefined) {
+            throw new Error("Cannot create Renderable without " + name)
+        }
         return out
+    }
+
+    // Utility for apply this object's scale to any xyz point.
+    _applyScale(point) {
+        let scale = this.getScale()
+        return {
+            x: point.x * scale,
+            y: point.y * scale,
+            z: point.z * scale,
+        }
     }
 
     /**
@@ -57,14 +64,9 @@ class Renderable {
     }
 
     getDimensions() {
-        let dimensions = this._config.dimensions
-        let scale = this.getScale()
-        let dimensionsOut = {
-            x: dimensions.x * scale,
-            y: dimensions.y * scale,
-            z: dimensions.z * scale,
-        }
-        return dimensionsOut
+        throw new Error(
+            "Renderable Highbrow objects must provide getDimensions()"
+        )
     }
 
     /**
@@ -76,15 +78,7 @@ class Renderable {
      * @property {number} z z coordinate
      */
     getOrigin() {
-        let origin = this._origin
-        let scale = this.getScale()
-        let offset = this.getOffset()
-        let originOut = {
-            x: origin.x * scale + offset.x,
-            y: origin.y * scale + offset.y,
-            z: origin.z * scale + offset.z,
-        }
-        return originOut
+        return this._origin
     }
 
     /**
@@ -104,30 +98,6 @@ class Renderable {
      */
     getScale() {
         return this._scale
-    }
-
-    /**
-     * Moves the object in 3D space, will affect all point calculations. Can be
-     * used to adjust for scale changes.
-     * @param {number} x - X offset
-     * @param {number} y - Y offset
-     * @param {number} z - Z offset
-     */
-    setOffset(x = 0, y = 0, z = 0) {
-        let offset = this._offset
-        offset.x = x
-        offset.y = y
-        offset.z = z
-    }
-
-    /**
-     * @return {Object} offset
-     * @property {number} x x coordinate
-     * @property {number} y y coordinate
-     * @property {number} z z coordinate
-     */
-    getOffset() {
-        return this._offset
     }
 
     getSpacing() {

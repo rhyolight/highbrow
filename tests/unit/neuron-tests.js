@@ -1,4 +1,3 @@
-const fs = require("fs")
 const assert = require("chai").assert
 const expect = require("chai").expect
 const testConfigs = require("../config")
@@ -11,6 +10,7 @@ describe("Neuron Unit Tests", () => {
 
     const config = {
         name: "layer 1",
+        origin: {x: 0, y: 0, z: 0},
         miniColumns: false,
         neuronCount: 1000,
         dimensions: {
@@ -21,6 +21,12 @@ describe("Neuron Unit Tests", () => {
     let neurons = layer.getNeurons()
 
     describe("upon creation by Layer", () => {
+        describe("if created without a position", () => {
+            it("throw an execption", () => {
+                expect(() => new Neuron({origin: {x: 0, y: 0, z: 0}}))
+                    .to.throw("Cannot create Neuron without position");
+            })
+        })
         it("returns the proper cell index", () => {
             neurons.forEach((neuron, index) => {
                 expect(neuron.getIndex()).to.equal(index)
@@ -73,6 +79,7 @@ describe("Neuron Unit Tests", () => {
         it("returns the correct origin with scale applied", () => {
             let config = {
                 name: "layer 1",
+                origin: {x: 0, y: 0, z: 0},
                 miniColumns: false,
                 neuronCount: 1000,
                 dimensions: {

@@ -17,53 +17,64 @@
         <script>
 
             $(function() {
-                const dimensions = {
-                    x: 10, y: 5, z: 12
-                }
-                const simple = {
-                    name: "simple network",
+                const oneColTwoLayers = {
+                    name: "one column, two layers",
+                    origin: {x: 0, y: 0, z: 0},
+                    scale: 100,
                     corticalColumns: [{
                         name: "column 1",
                         layers: [
                             {
-                                name: "layer 1",
+                                name: "layer 2/3",
                                 miniColumns: false,
-                                neuronCount: dimensions.x * dimensions.y * dimensions.z,
-                                dimensions: dimensions,
-                                // scale: 2,
-                                // offset: {x: 1, y: -1, z: 3}
+                                neuronCount: 4*3*4,
+                                dimensions: {
+                                    x: 4, y: 3, z: 4
+                                }
+                            },
+                            {
+                                name: "input space",
+                                miniColumns: false,
+                                neuronCount: 4*1*4,
+                                dimensions: {
+                                    x: 4, y: 1, z: 4
+                                }
                             }
                         ]
                     }]
                 }
-                var network = Highbrow.createHtmNetwork(simple)
-                var layer = network.getCorticalColumns()[0].getLayers()[0]
+                var network = Highbrow.createHtmNetwork(oneColTwoLayers)
+                var column = network.getCorticalColumns()[0]
 
-                var cellviz = new HighbrowLayerVisualization(layer);
+                var cellviz = new HighbrowColumnVisualization(column);
+                column.getLayers().forEach(function(layer) {
+                    console.log(layer.toString());
+                });
 
-                animateCells(layer);
+                // animateCells(column);
 
                 // Renders the canvas with empty cells into the DOM and canvas.
                 cellviz.render();
 
-                setInterval(function() {
-                    animateCells(layer);
-                    cellviz.redraw();
-                }, 500);
+                // setInterval(function() {
+                //     animateCells(column);
+                //     cellviz.redraw();
+                // }, 500);
 
-                function animateCells(layer) {
-                    // We're going straight to the Highbrow Layer object to
+                function animateCells(column) {
+                    // We're going straight to the Highbrow objects to
                     // update neuron states. We can access all the highbrow
                     // state from the layer directly and change it as we like.
-                    for (let neuron of layer.getNeurons()) {
-                        if (Math.random() >= 0.98) {
-                            neuron.activate()
-                        } else {
-                            neuron.deactivate()
-                        }
-                    }
+                    column.getLayers().forEach(function(layer) {
+                        layer.getNeurons().forEach(function(neuron) {
+                            if (Math.random() >= 0.98) {
+                                neuron.activate()
+                            } else {
+                                neuron.deactivate()
+                            }
+                        });
+                    });
                 }
-
             });
 
         </script>

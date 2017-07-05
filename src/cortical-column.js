@@ -14,8 +14,15 @@ class CorticalColumn extends Renderable {
     constructor(config, parent) {
         super(config, parent)
         this._layers = this._config.layers.map((layerConfig, index) => {
-            // Attach the same origin as the parent, but a clone.
-            layerConfig.origin = Object.assign({}, this.getOrigin())
+            // When creating children, we must apply the scale to the origin
+            // points to render them in the right perspective.
+            layerConfig.origin = Object.assign(
+                {}, this.getOrigin()
+            )
+            // We also need to set the same scale on all layers as we have as
+            // the parent.
+            layerConfig.scale = this.getScale()
+
             // Layers need spacing in between them, which will affect their
             // origin points in the Y direction. If there are multiple layers,
             // their Y origins get updated here using the column spacing and the
@@ -30,6 +37,10 @@ class CorticalColumn extends Renderable {
                     this._config.layers[index - 1].dimensions.y * index
                     + this.getSpacing() * index
             }
+            // Attach the same scale to the layer if it doesn't have one set.
+            // if (layerConfig.scale == undefined) {
+            //     layerConfig.scale = config.scale
+            // }
             return new Layer(layerConfig, this)
         })
     }

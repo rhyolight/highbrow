@@ -14,6 +14,9 @@ class Neuron extends Renderable {
     constructor(config, parent) {
         super(config, parent)
         this._state = NeuronState.inactive
+        if (config.position == undefined) {
+            throw Error("Cannot create Neuron without position")
+        }
         this._position = config.position
     }
 
@@ -26,20 +29,11 @@ class Neuron extends Renderable {
     }
 
     /**
-     * Neurons are not created with an origin initially like other
-     * {@link Renderable} objects, because they are laid out in a grid
-     * within the Layer space. But we know the position, so we can calculate the
-     * origin using the scale.
+     * The Neuron is the atomic unit of this visualization. It will always
+     * return dimensions of 1,1,1.
      */
-    getOrigin() {
-        let pos = this._position
-        let scale = this.getScale()
-        let offset = this.getOffset()
-        return {
-            x: pos.x * scale + offset.x,
-            y: pos.y * scale + offset.y,
-            z: pos.z * scale + offset.z,
-        }
+    getDimensions() {
+        return {x: 1, y: 1, z: 1}
     }
 
     /**
@@ -62,10 +56,9 @@ class Neuron extends Renderable {
      */
     toString() {
         let n = this.getName()
-        let p = this.position
+        let p = this.getPosition()
         let o = this.getOrigin()
-        let s = this.getScale()
-        return `${n} at position [${p.x}, ${p.y}, ${p.z}], coordinate [${o.x}, ${o.y}, ${o.z}] (scaled by ${s})`
+        return `${n} at position [${p.x}, ${p.y}, ${p.z}], coordinate [${o.x}, ${o.y}, ${o.z}]`
     }
 
     setState (state)  {

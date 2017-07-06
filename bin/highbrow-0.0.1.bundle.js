@@ -73,8 +73,8 @@
 
 /** @ignore */
 const CONFIG_DEFAULTS = {
-    scale: 1.0,
-    spacing: 1.0
+    scale: 1,
+    spacing: 0
 
     /**
      * Abstract base class for renderable objects. All renderable objects must
@@ -94,7 +94,9 @@ const CONFIG_DEFAULTS = {
      *        drawings.
      */
     constructor(config, parent = undefined) {
-        this._config = config;
+        // Clone the config so we don't change it in case it is reused somewhere
+        // else.
+        this._config = Object.assign({}, config);
         this._parent = parent;
         this._scale = this._getConfigValueOrDefault("scale");
         this._origin = this._getConfigValueOrDefault("origin");
@@ -144,7 +146,8 @@ const CONFIG_DEFAULTS = {
      * @property {number} z z coordinate
      */
     getOrigin() {
-        return this._origin;
+        // Returns a copy or else someone could inadvertantly change the origin.
+        return Object.assign({}, this._origin);
     }
 
     /**
@@ -526,32 +529,45 @@ const Layer = __webpack_require__(3);
 class CorticalColumn extends Renderable {
     constructor(config, parent) {
         super(config, parent);
-        this._layers = this._config.layers.map((layerConfig, index) => {
+        this._buildColumn();
+    }
+
+    _buildColumn() {
+        let columnOrigin = this.getOrigin();
+        let scale = this.getScale();
+        let accumulationForLayerY = 0;
+
+        console.log("processing layers for %s", this.getName());
+        // Reverse the layer configuration so that they render from bottom to
+        // top.
+        let reversedLayers = this._config.layers.slice().reverse();
+        this._layers = reversedLayers.map((layerConfigOriginal, layerIndex) => {
+            let layerConfig = Object.assign({}, layerConfigOriginal);
             // When creating children, we must apply the scale to the origin
             // points to render them in the right perspective.
-            layerConfig.origin = Object.assign({}, this.getOrigin());
+            layerConfig.origin = this.getOrigin();
             // We also need to set the same scale on all layers as we have as
             // the parent.
-            layerConfig.scale = this.getScale();
+            layerConfig.scale = scale;
+
+            // console.log("index %s: %s", layerIndex, layerConfig.name)
+            // console.log(layerConfig.origin)
 
             // Layers need spacing in between them, which will affect their
             // origin points in the Y direction. If there are multiple layers,
-            // their Y origins get updated here using the column spacing and the
-            // sizes of lower layers.
+            // their Y origins get updated here using the scale, column spacing,
+            // and the sizes of lower layers. Each layer is rendered below the
+            // last to keep the config alignment the same as the visual
+            // alignment.
+            layerConfig.origin.y = layerConfig.origin.y + accumulationForLayerY * scale + this.getSpacing() * layerIndex;
+            // console.log(layerConfig.origin)
+            // console.log("%s * %s = %s", accumulationForLayerY, scale, accumulationForLayerY*scale)
+            // console.log("%s * %s = %s", this.getSpacing(), layerIndex, this.getSpacing()*layerIndex)
 
-            // FIXME: I think there is abug here, but my tests don't uncover it.
-            //        It's because only the layer immediately under the current
-            //        layer has its Y dimension counted, lower layers may have
-            //        other Y dimensions.
-            if (index > 0) {
-                layerConfig.origin.y = this._config.layers[index - 1].dimensions.y * index + this.getSpacing() * index;
-            }
-            // Attach the same scale to the layer if it doesn't have one set.
-            // if (layerConfig.scale == undefined) {
-            //     layerConfig.scale = config.scale
-            // }
-            return new Layer(layerConfig, this);
-        });
+            let layer = new Layer(layerConfig, this);
+            accumulationForLayerY += layer.getDimensions().y;
+            return layer;
+        }).reverse();
     }
 
     /**

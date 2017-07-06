@@ -7,7 +7,15 @@ const Layer = require("../../src/layer")
 
 describe("Layer Unit Tests", () => {
 
-    const config = Object.assign({}, testConfigs.simple).corticalColumns[0].layers[0]
+    const config = {
+        name: "layer 1",
+        origin: {x:0, y:0, z:0},
+        miniColumns: false,
+        neuronCount: 100,
+        dimensions: {
+            x: 10, y: 10, z: 1
+        }
+    }
 
     describe("upon creation with origin", () => {
         let cfg = Object.assign({}, config)

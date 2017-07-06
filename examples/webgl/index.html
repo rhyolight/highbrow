@@ -22,10 +22,11 @@
                     origin: {x: 0, y: 0, z: 0},
                     scale: 100,
                     corticalColumns: [{
+                        spacing: 100,
                         name: "column 1",
                         layers: [
                             {
-                                name: "layer 2/3",
+                                name: "layer 4",
                                 miniColumns: false,
                                 neuronCount: 4*3*4,
                                 dimensions: {
@@ -33,11 +34,19 @@
                                 }
                             },
                             {
+                                name: "layer 2/3",
+                                miniColumns: false,
+                                neuronCount: 5*3*5,
+                                dimensions: {
+                                    x: 5, y: 3, z: 5
+                                }
+                            },
+                            {
                                 name: "input space",
                                 miniColumns: false,
-                                neuronCount: 4*1*4,
+                                neuronCount: 5*1*5,
                                 dimensions: {
-                                    x: 4, y: 1, z: 4
+                                    x: 5, y: 1, z: 5
                                 }
                             }
                         ]
@@ -46,20 +55,20 @@
                 var network = Highbrow.createHtmNetwork(oneColTwoLayers)
                 var column = network.getCorticalColumns()[0]
 
-                var cellviz = new HighbrowColumnVisualization(column);
+                var cellviz = new HighbrowColumnVisualization(column, {cubeSize: 100});
                 column.getLayers().forEach(function(layer) {
                     console.log(layer.toString());
                 });
 
-                // animateCells(column);
+                animateCells(column);
 
                 // Renders the canvas with empty cells into the DOM and canvas.
                 cellviz.render();
 
-                // setInterval(function() {
-                //     animateCells(column);
-                //     cellviz.redraw();
-                // }, 500);
+                setInterval(function() {
+                    animateCells(column);
+                    cellviz.redraw();
+                }, 500);
 
                 function animateCells(column) {
                     // We're going straight to the Highbrow objects to

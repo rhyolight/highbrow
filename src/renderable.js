@@ -4,8 +4,8 @@
 
 /** @ignore */
 const CONFIG_DEFAULTS = {
-    scale: 1.0,
-    spacing: 1.0,
+    scale: 1,
+    spacing: 0,
 }
 
 /**
@@ -26,7 +26,9 @@ class Renderable {
      *        drawings.
      */
     constructor(config, parent = undefined) {
-        this._config = config
+        // Clone the config so we don't change it in case it is reused somewhere
+        // else.
+        this._config = Object.assign({}, config)
         this._parent = parent
         this._scale = this._getConfigValueOrDefault("scale")
         this._origin = this._getConfigValueOrDefault("origin")
@@ -78,7 +80,8 @@ class Renderable {
      * @property {number} z z coordinate
      */
     getOrigin() {
-        return this._origin
+        // Returns a copy or else someone could inadvertantly change the origin.
+        return Object.assign({}, this._origin)
     }
 
     /**

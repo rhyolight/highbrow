@@ -26,7 +26,11 @@ class CorticalColumn extends Renderable {
         let reversedLayers = this._config.layers.slice().reverse()
         reversedLayers.map((layerConfigOriginal, layerIndex) => {
             let layerConfig = Object.assign({}, layerConfigOriginal)
-            layerConfig.scale = scale
+            // Only pass along the column's scale if there is no user-defined
+            // scale present.
+            if (layerConfig.scale == undefined) {
+                layerConfig.scale = scale
+            }
             layerConfig.origin = this.getOrigin()
 
             // Default cell spacing for layers will be 10% of scale, or 0

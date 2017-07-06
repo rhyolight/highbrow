@@ -536,7 +536,6 @@ class CorticalColumn extends Renderable {
     _buildColumn() {
         let columnOrigin = this.getOrigin();
         let scale = this.getScale();
-        // let accumulationForLayerY = 0
         let processedLayers = [];
 
         // Reverse the layer configuration so that they render from bottom to
@@ -544,7 +543,11 @@ class CorticalColumn extends Renderable {
         let reversedLayers = this._config.layers.slice().reverse();
         reversedLayers.map((layerConfigOriginal, layerIndex) => {
             let layerConfig = Object.assign({}, layerConfigOriginal);
-            layerConfig.scale = scale;
+            // Only pass along the column's scale if there is no user-defined
+            // scale present.
+            if (layerConfig.scale == undefined) {
+                layerConfig.scale = scale;
+            }
             layerConfig.origin = this.getOrigin();
 
             // Default cell spacing for layers will be 10% of scale, or 0
@@ -553,29 +556,21 @@ class CorticalColumn extends Renderable {
                 if (layerConfig.spacing < 1) layerConfig.spacing = 0;
             }
 
-            // Get the total height of previously processed layers.
-            let layerBuffer = processedLayers.map(processedLayer => {
+            // Get the total height of previously processed layers so we know
+            // where to put the origin for this layer.
+            let layerY = processedLayers.map(processedLayer => {
                 let ydim = processedLayer.getDimensions().y;
                 let cellHeight = ydim * processedLayer.getScale();
                 let spacingHeight = (ydim - 1) * processedLayer.getSpacing();
                 let columnSpacing = this.getSpacing();
-                console.log("---- %s Y dimensions:", processedLayer.getName());
-                console.log("cell height: %s\tspacing height: %s\tcolumn spacing: %s", cellHeight, spacingHeight, columnSpacing);
                 return cellHeight + spacingHeight + columnSpacing;
             }).reduce((sum, value) => {
                 return sum + value;
             }, 0);
 
-            // Layers need spacing in between them, which will affect their
-            // origin points in the Y direction. If there are multiple layers,
-            // their Y origins get updated here using the scale, column spacing,
-            // and the sizes of lower layers. Each layer is rendered below the
-            // last to keep the config alignment the same as the visual
-            // alignment.
-            layerConfig.origin.y = layerConfig.origin.y + layerBuffer;
+            layerConfig.origin.y = layerConfig.origin.y + layerY;
 
             let layer = new Layer(layerConfig, this);
-            // accumulationForLayerY += layer.getDimensions().y
             processedLayers.push(layer);
             return layer;
         });

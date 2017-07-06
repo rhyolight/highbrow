@@ -41,7 +41,7 @@ Data, either streaming or batched, that contains the state of the HTM system. Sh
 
 # Configuring an HTM Network for Highbrow
 
-HTM Networks consiste of CorticalColumns, Layers, Neurons, and (sometimes) MiniColumns. HTM Networks can be defined in a configuration file, which is enough information to render the structures in 3D. The configuration is a JSON object that looks like this:
+HTM Networks consists of CorticalColumns, Layers, Neurons, and (sometimes) MiniColumns. HTM Networks can be defined in a configuration file, which is enough information to render the structures in 3D. The configuration is a JSON object that looks like this:
 
 ```json
 {
@@ -67,12 +67,21 @@ Each node in this tree represents a Renderable object. The top level is an HtmNe
 
 Layers must have dimensions. The dimensions of CorticalColumns and HtmNetworks are calculated from the layers.
 
+## Scale and Spacing
+
+Scale is basically how large the rendering will be. You can think of it also has how big each neuron's renderable space is. By default it is 1 unit, which is pretty small in most spaces. A reasonable scale is `100`, which would give each neuron a space of 100x100x100 unit for rendering.
+
+Spacing represents how much empty space will be between renderable objects. When spacing is applied to the CorticalColumn configuration, it affects how much space is between layers in the column. When applied to Layer configuration, it affects how much space is between Neurons in the Layer.
+
+When applying scale and spacing, be sure to present the spacing values within the scale. For example, if your Layer scale is `100` and you want cells to be spaced with 1/2 a cell width between them, you should set the Layer spacing to `50`.
 
 # Objects
 
 ## Neuron
 
-Represents a pyramidal neuron. Neurons can be put into different states. Must be created with a `position` corresponding to its XYZ location in the layer cell grid. Neurons are created by their parent Layer objects.
+Represents a pyramidal neuron. Neurons can be put into different states. Must be created with a `position` corresponding to its XYZ location in the layer cell grid. Neurons are created by their parent Layer objects, which decides its `origin` at time of creation.
+
+To get the XYZ origin (the renderable 3D coordinate) of a Neuron, call `neuron.getOrigin()`. To get its position in the cellular grid within the layer, call `neuron.getPosition()`.
 
 ## Layer
 

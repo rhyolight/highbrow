@@ -55,6 +55,42 @@ class Layer extends Renderable {
         this._buildLayer()
     }
 
+    /**
+     * Builds out the layer from scratch using the config object. Creates an
+     * array of {@link Neuron}s that will be used for the lifespan of the Layer.
+     */
+    _buildLayer() {
+        this._neurons = []
+        let count = this._config.neuronCount
+        let layerOrigin = this.getOrigin()
+        let spacing = this.getSpacing()
+        for (let i = 0; i < count; i++) {
+            let position = getXyzPositionFromIndex(
+                i, this._dimensions.x, this._dimensions.y
+            )
+            // When creating children, we must apply the scale to the origin
+            // points to render them in the right perspective.
+            let scaledPosition = this._applyScale(position)
+            // Start from the layer origin and add the scaled position.
+            let origin = {
+                x: layerOrigin.x + scaledPosition.x + position.x * spacing,
+                y: layerOrigin.y + scaledPosition.y + position.y * spacing,
+                z: layerOrigin.z + scaledPosition.z + position.z * spacing,
+            }
+            let neuron = new Neuron({
+                name: `Neuron ${i}`,
+                state: NeuronState.inactive,
+                index: i,
+                position: position,
+                origin: origin
+            }, this)
+            this._neurons.push(neuron)
+        }
+        if (this._config.miniColumns) {
+            // TODO: implement minicolumns.
+        }
+    }
+
     getDimensions() {
         return this._dimensions
     }
@@ -125,41 +161,6 @@ class Layer extends Renderable {
             out += ` contains ${this._neurons.length} neurons scaled by ${this.getScale()}`
         }
         return out
-    }
-
-    /**
-     * Builds out the layer from scratch using the config object. Creates an
-     * array of {@link Neuron}s that will be used for the lifespan of the Layer.
-     */
-    _buildLayer() {
-        this._neurons = []
-        let count = this._config.neuronCount
-        let layerOrigin = this.getOrigin()
-        for (let i = 0; i < count; i++) {
-            let position = getXyzPositionFromIndex(
-                i, this._dimensions.x, this._dimensions.y
-            )
-            // When creating children, we must apply the scale to the origin
-            // points to render them in the right perspective.
-            let scaledPosition = this._applyScale(position)
-            // Start from the layer origin and add the scaled position.
-            let origin = {
-                x: layerOrigin.x + scaledPosition.x,
-                y: layerOrigin.y + scaledPosition.y,
-                z: layerOrigin.z + scaledPosition.z,
-            }
-            let neuron = new Neuron({
-                name: `Neuron ${i}`,
-                state: NeuronState.inactive,
-                index: i,
-                position: position,
-                origin: origin
-            }, this)
-            this._neurons.push(neuron)
-        }
-        if (this._config.miniColumns) {
-            // TODO: implement minicolumns.
-        }
     }
 
 }

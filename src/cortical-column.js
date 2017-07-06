@@ -19,31 +19,42 @@ class CorticalColumn extends Renderable {
     _buildColumn() {
         let columnOrigin = this.getOrigin()
         let scale = this.getScale()
-        let accumulationForLayerY = 0
+        let processedLayers = []
 
-        console.log("processing layers for %s", this.getName())
         // Reverse the layer configuration so that they render from bottom to
-        // top.
+        // top. slice() copies the array first so the config is not altered.
         let reversedLayers = this._config.layers.slice().reverse()
-        this._layers = reversedLayers.map((layerConfigOriginal, layerIndex) => {
+        reversedLayers.map((layerConfigOriginal, layerIndex) => {
             let layerConfig = Object.assign({}, layerConfigOriginal)
             layerConfig.scale = scale
             layerConfig.origin = this.getOrigin()
 
-            // Layers need spacing in between them, which will affect their
-            // origin points in the Y direction. If there are multiple layers,
-            // their Y origins get updated here using the scale, column spacing,
-            // and the sizes of lower layers. Each layer is rendered below the
-            // last to keep the config alignment the same as the visual
-            // alignment.
-            layerConfig.origin.y = layerConfig.origin.y
-                                    + accumulationForLayerY * scale
-                                    + this.getSpacing() * layerIndex
+            // Default cell spacing for layers will be 10% of scale, or 0
+            if (layerConfig.spacing == undefined) {
+                layerConfig.spacing = scale / 10
+                if (layerConfig.spacing < 1) layerConfig.spacing = 0
+            }
+
+            // Get the total height of previously processed layers so we know
+            // where to put the origin for this layer.
+            let layerY = processedLayers.map((processedLayer) => {
+                let ydim = processedLayer.getDimensions().y
+                let cellHeight = ydim * processedLayer.getScale()
+                let spacingHeight = (ydim - 1) * processedLayer.getSpacing()
+                let columnSpacing = this.getSpacing()
+                return cellHeight + spacingHeight + columnSpacing
+            }).reduce((sum, value) => {
+                return sum + value
+            }, 0)
+
+            layerConfig.origin.y = layerConfig.origin.y + layerY
 
             let layer = new Layer(layerConfig, this)
-            accumulationForLayerY += layer.getDimensions().y
+            processedLayers.push(layer)
             return layer
-        }).reverse()
+        })
+        // The layers were processed in reverse order, reverse them again.
+        this._layers = processedLayers.reverse()
     }
 
     /**

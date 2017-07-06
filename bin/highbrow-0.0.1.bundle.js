@@ -338,6 +338,40 @@ class Layer extends Renderable {
         this._buildLayer();
     }
 
+    /**
+     * Builds out the layer from scratch using the config object. Creates an
+     * array of {@link Neuron}s that will be used for the lifespan of the Layer.
+     */
+    _buildLayer() {
+        this._neurons = [];
+        let count = this._config.neuronCount;
+        let layerOrigin = this.getOrigin();
+        let spacing = this.getSpacing();
+        for (let i = 0; i < count; i++) {
+            let position = getXyzPositionFromIndex(i, this._dimensions.x, this._dimensions.y);
+            // When creating children, we must apply the scale to the origin
+            // points to render them in the right perspective.
+            let scaledPosition = this._applyScale(position);
+            // Start from the layer origin and add the scaled position.
+            let origin = {
+                x: layerOrigin.x + scaledPosition.x + position.x * spacing,
+                y: layerOrigin.y + scaledPosition.y + position.y * spacing,
+                z: layerOrigin.z + scaledPosition.z + position.z * spacing
+            };
+            let neuron = new Neuron({
+                name: `Neuron ${i}`,
+                state: NeuronState.inactive,
+                index: i,
+                position: position,
+                origin: origin
+            }, this);
+            this._neurons.push(neuron);
+        }
+        if (this._config.miniColumns) {
+            // TODO: implement minicolumns.
+        }
+    }
+
     getDimensions() {
         return this._dimensions;
     }
@@ -406,39 +440,6 @@ class Layer extends Renderable {
             out += ` contains ${this._neurons.length} neurons scaled by ${this.getScale()}`;
         }
         return out;
-    }
-
-    /**
-     * Builds out the layer from scratch using the config object. Creates an
-     * array of {@link Neuron}s that will be used for the lifespan of the Layer.
-     */
-    _buildLayer() {
-        this._neurons = [];
-        let count = this._config.neuronCount;
-        let layerOrigin = this.getOrigin();
-        for (let i = 0; i < count; i++) {
-            let position = getXyzPositionFromIndex(i, this._dimensions.x, this._dimensions.y);
-            // When creating children, we must apply the scale to the origin
-            // points to render them in the right perspective.
-            let scaledPosition = this._applyScale(position);
-            // Start from the layer origin and add the scaled position.
-            let origin = {
-                x: layerOrigin.x + scaledPosition.x,
-                y: layerOrigin.y + scaledPosition.y,
-                z: layerOrigin.z + scaledPosition.z
-            };
-            let neuron = new Neuron({
-                name: `Neuron ${i}`,
-                state: NeuronState.inactive,
-                index: i,
-                position: position,
-                origin: origin
-            }, this);
-            this._neurons.push(neuron);
-        }
-        if (this._config.miniColumns) {
-            // TODO: implement minicolumns.
-        }
     }
 
 }
@@ -535,23 +536,35 @@ class CorticalColumn extends Renderable {
     _buildColumn() {
         let columnOrigin = this.getOrigin();
         let scale = this.getScale();
-        let accumulationForLayerY = 0;
+        // let accumulationForLayerY = 0
+        let processedLayers = [];
 
-        console.log("processing layers for %s", this.getName());
         // Reverse the layer configuration so that they render from bottom to
-        // top.
+        // top. slice() copies the array first so the config is not altered.
         let reversedLayers = this._config.layers.slice().reverse();
-        this._layers = reversedLayers.map((layerConfigOriginal, layerIndex) => {
+        reversedLayers.map((layerConfigOriginal, layerIndex) => {
             let layerConfig = Object.assign({}, layerConfigOriginal);
-            // When creating children, we must apply the scale to the origin
-            // points to render them in the right perspective.
-            layerConfig.origin = this.getOrigin();
-            // We also need to set the same scale on all layers as we have as
-            // the parent.
             layerConfig.scale = scale;
+            layerConfig.origin = this.getOrigin();
 
-            // console.log("index %s: %s", layerIndex, layerConfig.name)
-            // console.log(layerConfig.origin)
+            // Default cell spacing for layers will be 10% of scale, or 0
+            if (layerConfig.spacing == undefined) {
+                layerConfig.spacing = scale / 10;
+                if (layerConfig.spacing < 1) layerConfig.spacing = 0;
+            }
+
+            // Get the total height of previously processed layers.
+            let layerBuffer = processedLayers.map(processedLayer => {
+                let ydim = processedLayer.getDimensions().y;
+                let cellHeight = ydim * processedLayer.getScale();
+                let spacingHeight = (ydim - 1) * processedLayer.getSpacing();
+                let columnSpacing = this.getSpacing();
+                console.log("---- %s Y dimensions:", processedLayer.getName());
+                console.log("cell height: %s\tspacing height: %s\tcolumn spacing: %s", cellHeight, spacingHeight, columnSpacing);
+                return cellHeight + spacingHeight + columnSpacing;
+            }).reduce((sum, value) => {
+                return sum + value;
+            }, 0);
 
             // Layers need spacing in between them, which will affect their
             // origin points in the Y direction. If there are multiple layers,
@@ -559,15 +572,15 @@ class CorticalColumn extends Renderable {
             // and the sizes of lower layers. Each layer is rendered below the
             // last to keep the config alignment the same as the visual
             // alignment.
-            layerConfig.origin.y = layerConfig.origin.y + accumulationForLayerY * scale + this.getSpacing() * layerIndex;
-            // console.log(layerConfig.origin)
-            // console.log("%s * %s = %s", accumulationForLayerY, scale, accumulationForLayerY*scale)
-            // console.log("%s * %s = %s", this.getSpacing(), layerIndex, this.getSpacing()*layerIndex)
+            layerConfig.origin.y = layerConfig.origin.y + layerBuffer;
 
             let layer = new Layer(layerConfig, this);
-            accumulationForLayerY += layer.getDimensions().y;
+            // accumulationForLayerY += layer.getDimensions().y
+            processedLayers.push(layer);
             return layer;
-        }).reverse();
+        });
+        // The layers were processed in reverse order, reverse them again.
+        this._layers = processedLayers.reverse();
     }
 
     /**

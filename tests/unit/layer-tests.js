@@ -193,4 +193,34 @@ describe("Layer Unit Tests", () => {
         })
     })
 
+    describe("with no scale and spacing of 1", () => {
+        let cfg = Object.assign({}, config)
+        cfg.scale = 1
+        cfg.spacing = 1
+        cfg.origin = {x:0, y:0, z:0}
+        let layer = new Layer(cfg)
+
+        it("positions and origins are properly spaced", () => {
+            for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
+                for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
+                    for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
+                        let globalIndex = zcount * config.dimensions.x * config.dimensions.y
+                                        + xcount * config.dimensions.y
+                                        + ycount
+                        let neuron = layer.getNeuronByIndex(globalIndex)
+                        expect(neuron.getPosition()).to.deep.equal({
+                            x: xcount, y: ycount, z: zcount
+                        })
+                        expect(neuron.getOrigin()).to.deep.equal({
+                            x: xcount + xcount * cfg.spacing, 
+                            y: ycount + ycount * cfg.spacing,
+                            z: zcount + zcount * cfg.spacing,
+                        })
+                    }
+                }
+            }
+        })
+
+    })
+
 })

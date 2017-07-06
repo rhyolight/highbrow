@@ -92,33 +92,21 @@ describe("CorticalColumn Unit Tests", () => {
                 let layer = column.getLayers()[0]
                 expect(layer.getOrigin()).to.deep.equal({x: 0, y: 10, z: 0})
             })
-            it("allows user defined layer spacing", () => {
-                let cfg = Object.assign({}, config);
-                cfg.spacing = 5
-                cfg.scale = 5
-                const column = new CorticalColumn(cfg)
-                let layer = column.getLayers()[0]
-                expect(layer.getOrigin()).to.deep.equal({x: 0, y: 55, z: 0})
-            })
         })
-        describe("with 100 scale", () => {
-            let cfg = Object.assign({}, config)
+        describe("with spacing and scale", () => {
+            let cfg = Object.assign({}, config);
             cfg.scale = 100
+            cfg.spacing = 50
+            cfg.layers[1].spacing = 10
             const column = new CorticalColumn(cfg)
             it("creates the second layer at the same origin as itself", () => {
                 let layer = column.getLayers()[1]
                 expect(layer.getOrigin()).to.deep.equal({x: 0, y: 0, z: 0})
             })
-            it("creates the first layer above first layer with one empty position between", () => {
+            it("creates the first layer directly above the second layer", () => {
                 let layer = column.getLayers()[0]
-                expect(layer.getOrigin()).to.deep.equal({x: 0, y: 1000, z: 0})
-            })
-            it("allows user defined layer spacing", () => {
-                let cfg = Object.assign({}, config)
-                cfg.spacing = 5
-                const column = new CorticalColumn(cfg)
-                let layer = column.getLayers()[0]
-                expect(layer.getOrigin()).to.deep.equal({x: 0, y: 15, z: 0})
+                let bottomLayerHeight = 10 * 100 + 9 * 10;
+                expect(layer.getOrigin()).to.deep.equal({x: 0, y: bottomLayerHeight + 50, z: 0})
             })
         })
     })
@@ -156,6 +144,7 @@ describe("CorticalColumn Unit Tests", () => {
                 }
             ]
         }
+
         describe("with layer spacing of 0", () => {
             let column = new CorticalColumn(config)
             it("creates the third layer at the same origin as itself", () => {
@@ -171,6 +160,7 @@ describe("CorticalColumn Unit Tests", () => {
                 expect(layer.getOrigin()).to.deep.equal({x: 0, y: 11, z: 0})
             })
         })
+
         describe("with layer spacing of 1", () => {
             let cfg = Object.assign({}, config)
             cfg.origin = {x: 0, y: 0, z: 0}

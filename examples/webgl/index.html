@@ -17,12 +17,16 @@
         <script>
 
             $(function() {
+                // The scale is same as "cube size". This makes the cubes 100
+                // pixels.
+                const scale = 100
                 const oneColTwoLayers = {
                     name: "one column, two layers",
                     origin: {x: 0, y: 0, z: 0},
-                    scale: 100,
+                    scale: scale,
                     corticalColumns: [{
-                        spacing: 100,
+                        // Puts one cell between layers
+                        spacing: scale,
                         name: "column 1",
                         layers: [
                             {
@@ -44,9 +48,9 @@
                             {
                                 name: "input space",
                                 miniColumns: false,
-                                neuronCount: 5*1*5,
+                                neuronCount: 10*1*10,
                                 dimensions: {
-                                    x: 5, y: 1, z: 5
+                                    x: 10, y: 1, z: 10
                                 }
                             }
                         ]
@@ -55,10 +59,7 @@
                 var network = Highbrow.createHtmNetwork(oneColTwoLayers)
                 var column = network.getCorticalColumns()[0]
 
-                var cellviz = new HighbrowColumnVisualization(column, {cubeSize: 100});
-                column.getLayers().forEach(function(layer) {
-                    console.log(layer.toString());
-                });
+                var cellviz = new HighbrowColumnVisualization(column, {cubeSize: scale});
 
                 animateCells(column);
 

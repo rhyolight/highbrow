@@ -1,6 +1,6 @@
 {
   "name": "highbrow",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "HTM 3D Translation Library",
   "main": "index.js",
   "directories": {

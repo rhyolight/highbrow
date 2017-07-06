@@ -1,6 +1,7 @@
 // Simple network configuration. One column, one layer, no mini-columns.
 const simple = {
     name: "simple network",
+    origin: {x: 0, y: 0, z: 0},
     corticalColumns: [{
         name: "column 1",
         layers: [
@@ -18,6 +19,7 @@ const simple = {
 
 const oneColTwoLayers = {
     name: "one column, two layers",
+    origin: {x: 0, y: 0, z: 0},
     corticalColumns: [{
         name: "column 1",
         layers: [
@@ -42,6 +44,7 @@ const oneColTwoLayers = {
 }
 const oneColThreeLayers = {
     name: "one column, three layers",
+    origin: {x: 0, y: 0, z: 0},
     corticalColumns: [{
         name: "column 1",
         layers: [
@@ -75,6 +78,7 @@ const oneColThreeLayers = {
 // Complex network with multiple columns and layers, includes mini-columns.
 const complex = {
     name: "simple network",
+    origin: {x: 0, y: 0, z: 0},
     corticalColumns: [{
         name: "column 1",
         layers: [

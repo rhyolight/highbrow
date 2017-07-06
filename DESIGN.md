@@ -38,9 +38,81 @@ Data, either streaming or batched, that contains the state of the HTM system. Sh
 
 * * *
 
-# Proposed API
 
-To see the proposed API, build out the docs as described in the [README](README.md).
+# Configuring an HTM Network for Highbrow
+
+HTM Networks consiste of CorticalColumns, Layers, Neurons, and (sometimes) MiniColumns. HTM Networks can be defined in a configuration file, which is enough information to render the structures in 3D. The configuration is a JSON object that looks like this:
+
+```json
+{
+    name: "simple HtmNetwork",
+    origin: {x:0, y:0, z:0},
+    corticalColumns: [{
+        name: "CorticalColumn 1",
+        layers: [
+            {
+                name: "Layer 1",
+                miniColumns: false,
+                neuronCount: 100,
+                dimensions: {
+                    x: 10, y: 10, z: 1
+                }
+            }
+        ]
+    }]
+}
+```
+
+Each node in this tree represents a Renderable object. The top level is an HtmNetwork. It contains an array of `corticalColumns`. Each cortical column contains an array of `layers`.
+
+Layers must have dimensions. The dimensions of CorticalColumns and HtmNetworks are calculated from the layers.
+
+
+# Objects
+
+## Neuron
+
+Represents a pyramidal neuron. Neurons can be put into different states. Must be created with a `position` corresponding to its XYZ location in the layer cell grid. Neurons are created by their parent Layer objects.
+
+## Layer
+
+A collection of Neurons. They might just be in an array, or structured into MiniColumns (TODO). Layers have X, Y, and Z dimensions. The Y dimension will represent MiniColumns, if they exist. Because there may be less neurons in the structure than the dimension allows, a `neuronCount` must be provided in the layer config. Layer configuration looks like this:
+
+```json
+{
+    name: "layer 1",
+    miniColumns: false,
+    neuronCount: 100,
+    dimensions: {
+        x: 10, y: 10, z: 1
+    }
+}
+```
+
+## CorticalColumn
+
+A collection of Layers. Each Layer will be positioned below the proceeding Layer to align the configuration and the visualization with biological reality (input comes into the bottom, moves upward). Configuration:
+
+```json
+{
+    name: "column 1",
+    layers: [...]
+}
+```
+
+CorticalColumns are created by their parent HtmNetwork, and are assigned an origin point.
+
+## HtmNetwork
+
+An HtmNetwork is a collection of CorticalColumns. It must have an `origin` to be created.
+
+```json
+{
+    name: "one column, two layers",
+    origin: {x: 0, y: 0, z: 0},
+    corticalColumns: [...]
+}
+```
 
 * * *
 

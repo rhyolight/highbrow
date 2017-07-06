@@ -16,6 +16,8 @@ class HtmNetwork extends Renderable {
         this._corticalColumns = this._config.corticalColumns.map((config) => {
             // Attach the same origin as the parent, but a clone.
             config.origin = Object.assign({}, this.getOrigin())
+            // use the same scale as well
+            config.scale = this.getScale()
             return new CorticalColumn(config, this)
         })
     }

@@ -72,29 +72,19 @@
 // Copyright © 2017 Numenta <http://numenta.com>
 
 /** @ignore */
-const DEFAULT_ORIGIN = { x: 0, y: 0, z: 0
-    /** @ignore */
-};const DEFAULT_SCALE = 1.0;
-/** @ignore */
-const DEFAULT_OFFSET = { x: 0, y: 0, z: 0 };
+const CONFIG_DEFAULTS = {
+    scale: 1,
+    spacing: 0
 
-function getConfigValueOrDefault(name, config, def) {
-    let out = def;
-    if (config.hasOwnProperty(name)) {
-        out = config[name];
-    }
-    return out;
-}
-
-/**
- * Abstract base class for renderable objects. All renderable objects must
- * provide the following function implementations:
- * - {@link getChildren}
- *
- * NOTE: The size of {@link Renderable} objects is not controlled by this API.
- * Clients of this API are responsible for sizing.
- */
-class Renderable {
+    /**
+     * Abstract base class for renderable objects. All renderable objects must
+     * provide the following function implementations:
+     * - {@link getChildren}
+     *
+     * NOTE: The size of {@link Renderable} objects is not controlled by this API.
+     * Clients of this API are responsible for sizing.
+     */
+};class Renderable {
     /**
      * @param {Object} config - Contains all the details the Renderable needs to
      *        know to calculate origins for itself and its children.
@@ -102,18 +92,38 @@ class Renderable {
      * @param {Renderable} parent - The parent Renderable object (optional).
      * @param {number} scale - Default 1.0, used for UI clients to scale the
      *        drawings.
-     * @param {Object} offset - Moves the object in 3D space, will affect all
-     *        point calculations. Can be used to adjust for `scale` changes.
-     * @param {number} offset.x - X coordinate
-     * @param {number} offset.y - Y coordinate
-     * @param {number} offset.z - Z coordinate
      */
     constructor(config, parent = undefined) {
-        this._config = config;
+        // Clone the config so we don't change it in case it is reused somewhere
+        // else.
+        this._config = Object.assign({}, config);
         this._parent = parent;
-        this._scale = getConfigValueOrDefault("scale", config, DEFAULT_SCALE);
-        this._offset = getConfigValueOrDefault("offset", config, DEFAULT_OFFSET);
-        this._origin = getConfigValueOrDefault("origin", config, DEFAULT_ORIGIN);
+        this._scale = this._getConfigValueOrDefault("scale");
+        this._origin = this._getConfigValueOrDefault("origin");
+        this._spacing = this._getConfigValueOrDefault("spacing");
+    }
+
+    // Utility for overridding default values and throwing error if no value
+    // exists.
+    _getConfigValueOrDefault(name) {
+        let out = CONFIG_DEFAULTS[name];
+        if (this._config.hasOwnProperty(name)) {
+            out = this._config[name];
+        }
+        if (out == undefined) {
+            throw new Error("Cannot create Renderable without " + name);
+        }
+        return out;
+    }
+
+    // Utility for apply this object's scale to any xyz point.
+    _applyScale(point) {
+        let scale = this.getScale();
+        return {
+            x: point.x * scale,
+            y: point.y * scale,
+            z: point.z * scale
+        };
     }
 
     /**
@@ -124,14 +134,7 @@ class Renderable {
     }
 
     getDimensions() {
-        let dimensions = this._config.dimensions;
-        let scale = this.getScale();
-        let dimensionsOut = {
-            x: dimensions.x * scale,
-            y: dimensions.y * scale,
-            z: dimensions.z * scale
-        };
-        return dimensionsOut;
+        throw new Error("Renderable Highbrow objects must provide getDimensions()");
     }
 
     /**
@@ -143,15 +146,8 @@ class Renderable {
      * @property {number} z z coordinate
      */
     getOrigin() {
-        let origin = this._origin;
-        let scale = this.getScale();
-        let offset = this.getOffset();
-        let originOut = {
-            x: origin.x * scale + offset.x,
-            y: origin.y * scale + offset.y,
-            z: origin.z * scale + offset.z
-        };
-        return originOut;
+        // Returns a copy or else someone could inadvertantly change the origin.
+        return Object.assign({}, this._origin);
     }
 
     /**
@@ -175,28 +171,8 @@ class Renderable {
         return this._scale;
     }
 
-    /**
-     * Moves the object in 3D space, will affect all point calculations. Can be
-     * used to adjust for scale changes.
-     * @param {number} x - X offset
-     * @param {number} y - Y offset
-     * @param {number} z - Z offset
-     */
-    setOffset(x = 0, y = 0, z = 0) {
-        let offset = this._offset;
-        offset.x = x;
-        offset.y = y;
-        offset.z = z;
-    }
-
-    /**
-     * @return {Object} offset
-     * @property {number} x x coordinate
-     * @property {number} y y coordinate
-     * @property {number} z z coordinate
-     */
-    getOffset() {
-        return this._offset;
+    getSpacing() {
+        return this._spacing;
     }
 
     /**
@@ -355,7 +331,49 @@ function getXyzPositionFromIndex(idx, xsize, ysize) {
 class Layer extends Renderable {
     constructor(config, parent) {
         super(config, parent);
+        if (config.dimensions == undefined) {
+            throw Error("Cannot create Layer without dimensions");
+        }
+        this._dimensions = config.dimensions;
         this._buildLayer();
+    }
+
+    /**
+     * Builds out the layer from scratch using the config object. Creates an
+     * array of {@link Neuron}s that will be used for the lifespan of the Layer.
+     */
+    _buildLayer() {
+        this._neurons = [];
+        let count = this._config.neuronCount;
+        let layerOrigin = this.getOrigin();
+        let spacing = this.getSpacing();
+        for (let i = 0; i < count; i++) {
+            let position = getXyzPositionFromIndex(i, this._dimensions.x, this._dimensions.y);
+            // When creating children, we must apply the scale to the origin
+            // points to render them in the right perspective.
+            let scaledPosition = this._applyScale(position);
+            // Start from the layer origin and add the scaled position.
+            let origin = {
+                x: layerOrigin.x + scaledPosition.x + position.x * spacing,
+                y: layerOrigin.y + scaledPosition.y + position.y * spacing,
+                z: layerOrigin.z + scaledPosition.z + position.z * spacing
+            };
+            let neuron = new Neuron({
+                name: `Neuron ${i}`,
+                state: NeuronState.inactive,
+                index: i,
+                position: position,
+                origin: origin
+            }, this);
+            this._neurons.push(neuron);
+        }
+        if (this._config.miniColumns) {
+            // TODO: implement minicolumns.
+        }
+    }
+
+    getDimensions() {
+        return this._dimensions;
     }
 
     /**
@@ -419,32 +437,9 @@ class Layer extends Renderable {
                 }
             }
         } else {
-            out += ` contains ${this._neurons.length} neurons`;
+            out += ` contains ${this._neurons.length} neurons scaled by ${this.getScale()}`;
         }
         return out;
-    }
-
-    /**
-     * Builds out the layer from scratch using the config object. Creates an
-     * array of {@link Neuron}s that will be used for the lifespan of the Layer.
-     */
-    _buildLayer() {
-        this._neurons = [];
-        let count = this._config.neuronCount;
-        for (let i = 0; i < count; i++) {
-            let neuron = new Neuron({
-                name: `Neuron ${i}`,
-                state: NeuronState.inactive,
-                index: i,
-                position: getXyzPositionFromIndex(i, this._config.dimensions.x, this._config.dimensions.y),
-                scale: this.getScale(),
-                offset: this.getOffset()
-            }, this);
-            this._neurons.push(neuron);
-        }
-        if (this._config.miniColumns) {
-            // TODO: implement minicolumns.
-        }
     }
 
 }
@@ -535,9 +530,57 @@ const Layer = __webpack_require__(3);
 class CorticalColumn extends Renderable {
     constructor(config, parent) {
         super(config, parent);
-        this._layers = this._config.layers.map(config => {
-            return new Layer(config, this);
+        this._buildColumn();
+    }
+
+    _buildColumn() {
+        let columnOrigin = this.getOrigin();
+        let scale = this.getScale();
+        // let accumulationForLayerY = 0
+        let processedLayers = [];
+
+        // Reverse the layer configuration so that they render from bottom to
+        // top. slice() copies the array first so the config is not altered.
+        let reversedLayers = this._config.layers.slice().reverse();
+        reversedLayers.map((layerConfigOriginal, layerIndex) => {
+            let layerConfig = Object.assign({}, layerConfigOriginal);
+            layerConfig.scale = scale;
+            layerConfig.origin = this.getOrigin();
+
+            // Default cell spacing for layers will be 10% of scale, or 0
+            if (layerConfig.spacing == undefined) {
+                layerConfig.spacing = scale / 10;
+                if (layerConfig.spacing < 1) layerConfig.spacing = 0;
+            }
+
+            // Get the total height of previously processed layers.
+            let layerBuffer = processedLayers.map(processedLayer => {
+                let ydim = processedLayer.getDimensions().y;
+                let cellHeight = ydim * processedLayer.getScale();
+                let spacingHeight = (ydim - 1) * processedLayer.getSpacing();
+                let columnSpacing = this.getSpacing();
+                console.log("---- %s Y dimensions:", processedLayer.getName());
+                console.log("cell height: %s\tspacing height: %s\tcolumn spacing: %s", cellHeight, spacingHeight, columnSpacing);
+                return cellHeight + spacingHeight + columnSpacing;
+            }).reduce((sum, value) => {
+                return sum + value;
+            }, 0);
+
+            // Layers need spacing in between them, which will affect their
+            // origin points in the Y direction. If there are multiple layers,
+            // their Y origins get updated here using the scale, column spacing,
+            // and the sizes of lower layers. Each layer is rendered below the
+            // last to keep the config alignment the same as the visual
+            // alignment.
+            layerConfig.origin.y = layerConfig.origin.y + layerBuffer;
+
+            let layer = new Layer(layerConfig, this);
+            // accumulationForLayerY += layer.getDimensions().y
+            processedLayers.push(layer);
+            return layer;
         });
+        // The layers were processed in reverse order, reverse them again.
+        this._layers = processedLayers.reverse();
     }
 
     /**
@@ -612,6 +655,8 @@ class HtmNetwork extends Renderable {
         this._corticalColumns = this._config.corticalColumns.map(config => {
             // Attach the same origin as the parent, but a clone.
             config.origin = Object.assign({}, this.getOrigin());
+            // use the same scale as well
+            config.scale = this.getScale();
             return new CorticalColumn(config, this);
         });
     }
@@ -695,6 +740,9 @@ class Neuron extends Renderable {
     constructor(config, parent) {
         super(config, parent);
         this._state = NeuronState.inactive;
+        if (config.position == undefined) {
+            throw Error("Cannot create Neuron without position");
+        }
         this._position = config.position;
     }
 
@@ -707,20 +755,11 @@ class Neuron extends Renderable {
     }
 
     /**
-     * Neurons are not created with an origin initially like other
-     * {@link Renderable} objects, because they are laid out in a grid
-     * within the Layer space. But we know the position, so we can calculate the
-     * origin using the scale.
+     * The Neuron is the atomic unit of this visualization. It will always
+     * return dimensions of 1,1,1.
      */
-    getOrigin() {
-        let pos = this._position;
-        let scale = this.getScale();
-        let offset = this.getOffset();
-        return {
-            x: pos.x * scale + offset.x,
-            y: pos.y * scale + offset.y,
-            z: pos.z * scale + offset.z
-        };
+    getDimensions() {
+        return { x: 1, y: 1, z: 1 };
     }
 
     /**
@@ -743,10 +782,9 @@ class Neuron extends Renderable {
      */
     toString() {
         let n = this.getName();
-        let p = this.position;
+        let p = this.getPosition();
         let o = this.getOrigin();
-        let s = this.getScale();
-        return `${n} at position [${p.x}, ${p.y}, ${p.z}], coordinate [${o.x}, ${o.y}, ${o.z}] (scaled by ${s})`;
+        return `${n} at position [${p.x}, ${p.y}, ${p.z}], coordinate [${o.x}, ${o.y}, ${o.z}]`;
     }
 
     setState(state) {

@@ -1,4 +1,3 @@
-const fs = require("fs")
 const assert = require("chai").assert
 const expect = require("chai").expect
 const testConfigs = require("../config")
@@ -10,12 +9,48 @@ describe("Layer Unit Tests", () => {
 
     const config = {
         name: "layer 1",
+        origin: {x:0, y:0, z:0},
         miniColumns: false,
-        neuronCount: 1000,
+        neuronCount: 100,
         dimensions: {
-            x: 10, y: 10, z: 10
+            x: 10, y: 10, z: 1
         }
     }
+
+    describe("upon creation with origin", () => {
+        let cfg = Object.assign({}, config)
+        cfg.origin = {x: 1, y: 345, z: -94}
+        const layer = new Layer(cfg)
+        it("creates the first layer at the same origin as itself", () => {
+            expect(layer.getOrigin()).to.deep.equal({x: 1, y: 345, z: -94})
+        })
+        describe("when scale is applied", () => {
+            let cfg = Object.assign({}, config)
+            cfg.scale = 2.2
+            cfg.origin = {x: 1, y: 345, z: -94}
+            const layer = new Layer(cfg)
+            it("does not scale its own origin", () => {
+                expect(layer.getOrigin()).to.deep.equal({x: 1, y: 345, z: -94})
+            })
+            it("scales the neuron origins", () => {
+                layer.getNeurons().forEach(function(neuron, cellIndex) {
+                    let pos = neuron.getPosition()
+                    let expected = {
+                        x:   1 + pos.x * 2.2,
+                        y: 345 + pos.y * 2.2,
+                        z: -94 + pos.z * 2.2,
+                    }
+                    expect(neuron.getOrigin()).to.deep.equal(expected)
+                });
+            })
+        })
+        describe("if created without a dimension", () => {
+            it("throw an execption", () => {
+                expect(() => new Layer({origin: {x: 0, y: 0, z: 0}}))
+                    .to.throw('Cannot create Layer without dimensions');
+            })
+        })
+    })
 
     describe("regarding state updates", () => {
 
@@ -64,7 +99,7 @@ describe("Layer Unit Tests", () => {
 
         let layer = new Layer(config)
 
-        it("has y,x,z dimensional order", () => {
+        it("has y,x,z dimensional ordered neuron positions", () => {
             for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
                 for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
                     for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
@@ -72,7 +107,7 @@ describe("Layer Unit Tests", () => {
                                         + xcount * config.dimensions.y
                                         + ycount
                         let neuron = layer.getNeuronByIndex(globalIndex)
-                        expect(neuron.getOrigin()).to.deep.equal({
+                        expect(neuron.getPosition()).to.deep.equal({
                             x: xcount, y: ycount, z: zcount
                         })
                     }
@@ -83,9 +118,12 @@ describe("Layer Unit Tests", () => {
     })
 
     describe("at default scale of 1.0", () => {
-        let layer = new Layer(config)
+        let cfg = Object.assign({}, config)
+        cfg.scale = 1
+        cfg.origin = {x:0, y:0, z:0}
+        let layer = new Layer(cfg)
 
-        it("neuron origins are not scaled", () => {
+        it("positions and origins are not scaled", () => {
             for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
                 for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
                     for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
@@ -93,8 +131,10 @@ describe("Layer Unit Tests", () => {
                                         + xcount * config.dimensions.y
                                         + ycount
                         let neuron = layer.getNeuronByIndex(globalIndex)
-                        let origin = neuron.getOrigin()
-                        expect(origin).to.deep.equal({
+                        expect(neuron.getPosition()).to.deep.equal({
+                            x: xcount, y: ycount, z: zcount
+                        })
+                        expect(neuron.getOrigin()).to.deep.equal({
                             x: xcount, y: ycount, z: zcount
                         })
                     }
@@ -104,10 +144,11 @@ describe("Layer Unit Tests", () => {
     })
 
     describe("at scale of 2.0", () => {
-        let scaledConfig = Object.assign({}, config)
-        scaledConfig.scale = 2.0
-        let layer = new Layer(scaledConfig, "test")
-        it("neuron origin coordinates are doubled", () => {
+        let cfg = Object.assign({}, config)
+        cfg.scale = 2
+        cfg.origin = {x:0, y:0, z:0}
+        let layer = new Layer(cfg)
+        it("neuron origin coordinates are doubled and position stays the same", () => {
             for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
                 for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
                     for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
@@ -128,9 +169,10 @@ describe("Layer Unit Tests", () => {
     })
 
     describe("at scale of 0.5", () => {
-        let scaledConfig = Object.assign({}, config)
-        scaledConfig.scale = 0.5
-        let layer = new Layer(scaledConfig, "test")
+        let cfg = Object.assign({}, config)
+        cfg.scale = 0.5
+        cfg.origin = {x:0, y:0, z:0}
+        let layer = new Layer(cfg)
         it("neuron origin coordinates are halved", () => {
             for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
                 for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
@@ -151,39 +193,14 @@ describe("Layer Unit Tests", () => {
         })
     })
 
-    describe("with no offset", () => {
-        let layer = new Layer(config)
-        it("does not alter origin points", () => {
-            expect(layer.getOrigin()).to.deep.equal({x: 0, y: 0, z: 0})
-        })
-        it("does not offset neurons", () => {
-            for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
-                for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
-                    for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
-                        let globalIndex = zcount * config.dimensions.x * config.dimensions.y
-                                        + xcount * config.dimensions.y
-                                        + ycount
-                        let neuron = layer.getNeuronByIndex(globalIndex)
-                        let origin = neuron.getOrigin()
-                        expect(origin).to.deep.equal({
-                            x: xcount,
-                            y: ycount,
-                            z: zcount,
-                        })
-                    }
-                }
-            }
-        })
-    })
+    describe("with no scale and spacing of 1", () => {
+        let cfg = Object.assign({}, config)
+        cfg.scale = 1
+        cfg.spacing = 1
+        cfg.origin = {x:0, y:0, z:0}
+        let layer = new Layer(cfg)
 
-    describe("at offset of 10,10,10", () => {
-        let offsetConfig = Object.assign({}, config)
-        offsetConfig.offset = {x: 10, y: 10, z: 10}
-        let layer = new Layer(offsetConfig, "test")
-        it("layer origin is offset properly", () => {
-            expect(layer.getOrigin()).to.deep.equal({x: 10, y: 10, z: 10})
-        })
-        it("offsets neurons properly", () => {
+        it("positions and origins are properly spaced", () => {
             for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
                 for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
                     for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
@@ -191,43 +208,19 @@ describe("Layer Unit Tests", () => {
                                         + xcount * config.dimensions.y
                                         + ycount
                         let neuron = layer.getNeuronByIndex(globalIndex)
-                        let origin = neuron.getOrigin()
-                        expect(origin).to.deep.equal({
-                            x: xcount + 10,
-                            y: ycount + 10,
-                            z: zcount + 10,
+                        expect(neuron.getPosition()).to.deep.equal({
+                            x: xcount, y: ycount, z: zcount
+                        })
+                        expect(neuron.getOrigin()).to.deep.equal({
+                            x: xcount + xcount * cfg.spacing, 
+                            y: ycount + ycount * cfg.spacing,
+                            z: zcount + zcount * cfg.spacing,
                         })
                     }
                 }
             }
         })
-    })
 
-    describe("at offset of -10,20,1000", () => {
-        let offsetConfig = Object.assign({}, config)
-        offsetConfig.offset = {x: -10, y: 20, z: 1000}
-        let layer = new Layer(offsetConfig, "test")
-        it("layer origin is offset properly", () => {
-            expect(layer.getOrigin()).to.deep.equal({x: -10, y: 20, z: 1000})
-        })
-        it("offsets neurons properly", () => {
-            for (let zcount = 0; zcount < config.dimensions.z; zcount++) {
-                for (let xcount = 0; xcount < config.dimensions.x; xcount++) {
-                    for (let ycount = 0; ycount < config.dimensions.y; ycount++) {
-                        let globalIndex = zcount * config.dimensions.x * config.dimensions.y
-                                        + xcount * config.dimensions.y
-                                        + ycount
-                        let neuron = layer.getNeuronByIndex(globalIndex)
-                        let origin = neuron.getOrigin()
-                        expect(origin).to.deep.equal({
-                            x: xcount - 10,
-                            y: ycount + 20,
-                            z: zcount + 1000,
-                        })
-                    }
-                }
-            }
-        })
     })
 
 })

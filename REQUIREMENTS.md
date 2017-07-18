@@ -7,13 +7,23 @@ Highbrow will be used to provide graphical animations of HTM systems for use wit
 
 Highbrow should display an animated view of an HTM system as it runs. The HTM state data could be read in from a batched file or streamed into Highbrow directly from a running HTM system.
 
+## Network Configuration
+
+An HTM Network must be defined by an configuration. This YAML file should allow the complete configuration of a network, it's architecture, and all its components. This configuration allows the complete rendering of the network, sans neuron state. Neuron state updates will be make using a data stream (defined below).
+
 ## Data Format
+
+Each network configuration needs a data stream to update the network. A networks data stream format is unique to Networks that share the same exact architecture. Simply speaking, one network cannot use another network's data stream.
 
 The data format should be generic to HTM and not specific to any HTM implementation (like NuPIC). An atomic stream component would be the HTM state at any time `t`, which must at least contain:
 
 - active cells
 - active columns (if mini columns exist)
 - predictive cells
+
+### Linking Data to Configurations
+
+Because data is particular to specific network configurations, it might be necessary to "type check" data before attempting to stream. Data files might be able to properly identify the network configurations they work with in some type of header information.
 
 ## Playback Requirements
 

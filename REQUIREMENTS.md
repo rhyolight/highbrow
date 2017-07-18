@@ -31,6 +31,10 @@ In order to incorporate Highbrow content into video materials, scenarios must be
 
 ## Controls
 
+Users must be able to move around and through the animation as it runs. Fly controls seem to be the most flexible, using the typical `WASD` for strafing and `←↑→↓` to rotate the camera. Holding `shift` should increase the speed of movement and rotation.
+
+## Configuration Panel
+
 A hideable control panel should provide a way to change some visualization properties of rendered components. For example, each Layer should expose a UI to change the spacing of its Neurons. A Cortical Column should allow a configuration for users to set the spacing between Layers. Etc.
 
 ## Renderable Objects

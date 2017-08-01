@@ -9,7 +9,7 @@ Highbrow should display an animated view of an HTM system as it runs. The HTM st
 
 ## Network Configuration
 
-An HTM Network must be defined by an configuration. This YAML file should allow the complete configuration of a network, it's architecture, and all its components. This configuration allows the complete rendering of the network, sans neuron state. Neuron state updates will be make using a data stream (defined below).
+An HTM Network must be defined by an configuration. This file should allow the complete configuration of a network, it's architecture, and all its components. This configuration allows the complete rendering of the network, sans neuron state. Neuron state updates will be make using a data stream (defined below).
 
 ## Data Format
 

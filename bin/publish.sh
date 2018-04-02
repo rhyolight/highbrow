@@ -5,6 +5,7 @@ tmp="/tmp"
 npm install .
 npm run build
 
+rm -rf "$tmp/lowbrow"
 cp -r out "$tmp/lowbrow"
 
 git checkout gh-pages

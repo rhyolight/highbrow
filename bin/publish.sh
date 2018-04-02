@@ -11,7 +11,7 @@ cp out/* "$tmp/lowbrow/."
 
 git checkout gh-pages
 
-cp "$tmp/lowbrow" bin
+cp -r "$tmp/lowbrow" bin
 
 git add bin
 

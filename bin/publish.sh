@@ -14,6 +14,9 @@ mv node_modules "$tmp/lowbrow/."
 
 git checkout gh-pages
 
+git rm -rf bin
+git commit -m "Clean slate for new binaries"
+
 cp -r "$tmp/lowbrow" bin
 
 git add bin

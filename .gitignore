@@ -4,3 +4,5 @@ doc/
 .nyc_output/
 .idea/
 .DS_Store/
+
+package-lock.json

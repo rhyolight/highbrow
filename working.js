@@ -3,10 +3,11 @@
 // Copyright © 2005—2017 Numenta <http://numenta.com>
 
 const fs = require("fs")
-const Highbrow = require("./src/highbrow")
+const Highbrow = require("./src/lowbrow")
 
 let networkConfiguration = {
     name: "simple SP / TM network example",
+    origin: [0,0],
     corticalColumns: [{
         name: "column1",
         layers: [

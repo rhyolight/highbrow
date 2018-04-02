@@ -15,10 +15,10 @@ module.exports = {
         "./src/links",
         "./src/cortical-column",
         "./src/htm-network",
-        "./src/highbrow"
+        "./src/lowbrow"
     ],
     module: {
-        loaders: [
+        rules: [
             { test: path.join(__dirname, "src"),
               loader: "babel-loader" }
         ]

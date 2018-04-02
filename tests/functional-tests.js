@@ -2,7 +2,7 @@ const fs = require("fs")
 const assert = require("chai").assert
 const expect = require("chai").expect
 
-const Highbrow = require("../src/highbrow")
+const Highbrow = require("../src/lowbrow")
 const HtmNetwork = require("../src/htm-network")
 const CorticalColumn = require("../src/cortical-column")
 const Layer = require("../src/layer")

@@ -1,7 +1,7 @@
 {
-  "name": "highbrow",
-  "version": "0.0.2",
-  "description": "HTM 3D Translation Library",
+  "name": "lowbrow",
+  "version": "0.1.0",
+  "description": "WebGL HTM 3D Translation Library",
   "main": "index.js",
   "directories": {
     "example": "examples"
@@ -32,7 +32,7 @@
     "chai": "4.0.2",
     "esdoc": "^0.5.2",
     "mocha": "3.4.2",
-    "nyc": "^11.0.2",
-    "webpack": "^3.0.0"
-  }
+    "nyc": "^11.0.2"
+  },
+  "dependencies": {}
 }

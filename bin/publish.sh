@@ -5,11 +5,11 @@ tmp="/tmp"
 npm install .
 npm run build
 
-cp out "$tmp/lowbrow"
+cp -r out "$tmp/lowbrow"
 
 git checkout gh-pages
 
-cp -r "$tmp/lowbrow/bin" bin
+cp -r "$tmp/lowbrow" bin
 
 git add bin
 

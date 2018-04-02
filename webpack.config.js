@@ -25,6 +25,6 @@ module.exports = {
     },
     output: {
         path: __dirname + "/out",
-        filename: `highbrow-${version}.min.js`
+        filename: `lowbrow-${version}.min.js`
     }
 };

@@ -24,7 +24,7 @@ module.exports = {
         ]
     },
     output: {
-        path: __dirname + "/bin",
+        path: __dirname + "/out",
         filename: `highbrow-${version}.bundle.js`
     }
 };

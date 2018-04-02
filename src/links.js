@@ -1,4 +1,4 @@
-// Highbrow
+// Lowbrow
 // MIT License (see LICENSE)
 // Copyright © 2017 Numenta <http://numenta.com>
 

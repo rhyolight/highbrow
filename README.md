@@ -1,8 +1,8 @@
-# Highbrow
+# Lowbrow
 
-> HTM 3D Translation Library
+> WebGL HTM 3D Translation Library
 
-Currently under development. See design at [DESIGN](DESIGN.md) for motivation and notes. For more up-to-date architecture, build docs below.
+Currently under development. 
 
 ## Install
 
@@ -21,7 +21,7 @@ Currently under development. See design at [DESIGN](DESIGN.md) for motivation an
 
     npm run build
 
-Installs into `bin/highbrow-{X.Y.Z}.bundle.js`.
+Installs into `out/lowbrow-{X.Y.Z}.bundle.js`.
 
 ## Examples
 

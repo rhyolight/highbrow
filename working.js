@@ -1,9 +1,9 @@
-// Highbrow
+// Lowbrow
 // MIT License (see LICENSE)
 // Copyright © 2005—2017 Numenta <http://numenta.com>
 
 const fs = require("fs")
-const Highbrow = require("./src/lowbrow")
+const Lowbrow = require("./src/lowbrow")
 
 let networkConfiguration = {
     name: "simple SP / TM network example",
@@ -31,7 +31,7 @@ let networkConfiguration = {
     }]
 }
 
-network = Highbrow.createHtmNetwork(networkConfiguration)
+network = Lowbrow.createHtmNetwork(networkConfiguration)
 
 // Empty network should contain all inactive cells.
 

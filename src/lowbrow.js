@@ -1,4 +1,4 @@
-// Highbrow
+// Lowbrow
 // MIT License (see LICENSE)
 // Copyright © 2017 Numenta <http://numenta.com>
 
@@ -16,9 +16,9 @@ const HtmNetwork = require("./htm-network")
 const HtmNetworkLink = require("./links").HtmNetworkLink
 
 /**
- * This is the top-level static entry class for Highbrow.
+ * This is the top-level static entry class for Lowbrow.
  */
-class Highbrow {
+class Lowbrow {
 
     /**
      * Creates a new {@link HtmNetwork} with the given configuration.
@@ -50,7 +50,7 @@ class Highbrow {
     }
 }
 if (typeof window === 'undefined') {
-    module.exports = Highbrow
+    module.exports = Lowbrow
 } else {
-    window.Highbrow = Highbrow
+    window.Lowbrow = Lowbrow
 }

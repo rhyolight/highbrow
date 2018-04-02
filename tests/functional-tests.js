@@ -2,7 +2,7 @@ const fs = require("fs")
 const assert = require("chai").assert
 const expect = require("chai").expect
 
-const Highbrow = require("../src/lowbrow")
+const Lowbrow = require("../src/lowbrow")
 const HtmNetwork = require("../src/htm-network")
 const CorticalColumn = require("../src/cortical-column")
 const Layer = require("../src/layer")
@@ -18,9 +18,9 @@ links between them.
 
 
 // Build a simple network and type check its components.
-describe("Highbrow network factory object model", () => {
+describe("Lowbrow network factory object model", () => {
     describe("when creating a one column one layer Network", () => {
-        let network = Highbrow.createHtmNetwork(testConfigs.simple)
+        let network = Lowbrow.createHtmNetwork(testConfigs.simple)
         it("returns an HtmNetwork object", () => {
             expect(network).to.be.instanceOf(HtmNetwork)
         })
@@ -61,7 +61,7 @@ describe("Highbrow network factory object model", () => {
 
 // Tests the data update flow.
 describe("simple network data update", () => {
-    let network = Highbrow.createHtmNetwork(testConfigs.simple)
+    let network = Lowbrow.createHtmNetwork(testConfigs.simple)
     let originalColumns = network._corticalColumns
 
     describe("HtmNetwork", () => {

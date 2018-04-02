@@ -1,4 +1,4 @@
-// Highbrow
+// Lowbrow
 // MIT License (see LICENSE)
 // Copyright © 2017 Numenta <http://numenta.com>
 
@@ -67,7 +67,7 @@ class Renderable {
 
     getDimensions() {
         throw new Error(
-            "Renderable Highbrow objects must provide getDimensions()"
+            "Renderable Lowbrow objects must provide getDimensions()"
         )
     }
 
@@ -126,7 +126,7 @@ class Renderable {
      */
     getChildren() {
         throw new Error(
-            "Renderable Highbrow objects must provide getChildren()"
+            "Renderable Lowbrow objects must provide getChildren()"
         )
     }
 

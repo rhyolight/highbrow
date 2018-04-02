@@ -2,6 +2,7 @@
 
 tmp="/tmp"
 
+npm install .
 npm run build
 
 rm -rf "$tmp/lowbrow"

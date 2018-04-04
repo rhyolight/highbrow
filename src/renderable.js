@@ -1,6 +1,6 @@
 // Lowbrow
 // MIT License (see LICENSE)
-// Copyright © 2017 Numenta <http://numenta.com>
+// Copyright © 2018 Numenta <http://numenta.com>
 
 /** @ignore */
 const CONFIG_DEFAULTS = {

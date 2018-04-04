@@ -8,6 +8,7 @@ let pkg = JSON.parse(
 let version = pkg.version
 
 module.exports = {
+    mode: 'development',
     entry: [
         "./src/enums",
         "./src/utils",
